@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe V2 — Análise Comparativa entre Referências</title>
+<style>
+  /* Wireframe estático · neutro em identidade visual · D-149
+     Frente A (identidade visual) parqueada · D-015 Camada B
+     Foco: fluxo + estrutura de tela, não estética.                       */
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #222;
+    background: #f3f3f3;
+  }
+
+  .doc-header {
+    max-width: 1200px;
+    margin: 0 auto 16px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px dashed #888;
+  }
+  .doc-header h1 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .doc-header p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .nav {
+    max-width: 1200px;
+    margin: 0 auto 16px;
+    padding: 8px 16px;
+    background: #fff;
+    border: 1px dashed #888;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+  }
+  .nav a { color: #0645ad; text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+
+  .screen {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+    background: #fff;
+    border: 1px solid #999;
+  }
+  .screen-title {
+    background: #e0e0e0;
+    border-bottom: 1px solid #999;
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .screen-body { padding: 16px; }
+
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border: 1px solid #999;
+    background: #fafafa;
+    margin-bottom: 12px;
+  }
+  .app-header .title { font-weight: 600; font-size: 14px; }
+  .app-header .btn-row { display: flex; gap: 8px; }
+
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-bottom: 16px;
+    padding: 10px;
+    border: 1px dashed #888;
+    background: #fafafa;
+  }
+  .step {
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 11px;
+    border: 1px solid #bbb;
+    background: #f0f0f0;
+  }
+  .step.done { background: #d9ead9; border-color: #5c8a5c; }
+  .step.active { background: #ffffff; border-color: #222; font-weight: 600; outline: 2px solid #222; }
+  .step.locked { color: #888; background: #eee; }
+  .step-number { display: block; font-weight: 600; font-size: 10px; margin-bottom: 2px; letter-spacing: 0.5px; }
+
+  .panel {
+    border: 1px solid #bbb;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    background: #fff;
+  }
+  .panel-title {
+    font-weight: 600;
+    font-size: 12px;
+    margin: 0 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #ccc;
+  }
+  .panel-title .muted { font-weight: 400; color: #666; font-size: 11px; }
+
+  .row { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0; }
+  .col { flex: 1 1 240px; min-width: 180px; }
+
+  label.field-label {
+    display: block;
+    margin: 0 0 3px;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .helper-text {
+    font-size: 11px;
+    color: #666;
+    margin: 2px 0 8px;
+  }
+
+  .form-control {
+    display: inline-block;
+    padding: 6px 10px;
+    border: 1px solid #999;
+    background: #f9f9f9;
+    min-width: 160px;
+    font-family: inherit;
+    font-size: 12px;
+  }
+  .form-control.full { width: 100%; }
+  .form-control.placeholder { color: #777; font-style: italic; }
+
+  .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid #666;
+    background: #f0f0f0;
+    font-size: 11px;
+    cursor: default;
+    font-family: inherit;
+  }
+  .btn.primary { background: #444; color: #fff; border-color: #222; }
+  .btn.ghost { background: #fff; }
+  .btn.danger { background: #fff; color: #8b1a1a; border-color: #8b1a1a; }
+
+  .radio, .check {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 4px 12px 4px 0;
+    font-size: 12px;
+  }
+  .radio .dot, .check .box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #666;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .radio .dot { border-radius: 50%; }
+  .radio.selected .dot { background: #333; box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 3px #333; }
+  .check.checked .box::after {
+    content: "✓";
+    display: block;
+    text-align: center;
+    line-height: 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .summary-card {
+    border: 1px solid #5c8a5c;
+    background: #f0f7f0;
+    padding: 8px 12px;
+    margin: 6px 0;
+    font-size: 12px;
+  }
+  .summary-card .label { font-weight: 600; text-transform: uppercase; font-size: 10px; color: #2d5a2d; letter-spacing: 0.5px; }
+
+  .banner {
+    padding: 10px 14px;
+    margin: 10px 0;
+    border: 1px solid #888;
+    font-size: 12px;
+  }
+  .banner.info { background: #e8f1fa; border-color: #4a6d8c; }
+  .banner.warn { background: #fff8e1; border-color: #b88900; }
+  .banner.danger { background: #fde9e9; border-color: #a33a3a; }
+  .banner.success { background: #e8f5e9; border-color: #4a7a4a; }
+
+  .banner .b-title { font-weight: 700; display: block; margin-bottom: 3px; }
+  .banner .b-text { display: block; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .kpi {
+    border: 1px solid #999;
+    padding: 10px;
+    text-align: center;
+    background: #fafafa;
+  }
+  .kpi .k-label { font-size: 10px; text-transform: uppercase; color: #555; letter-spacing: 0.3px; }
+  .kpi .k-value { font-size: 18px; font-weight: 700; margin-top: 4px; }
+
+  .table-like {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin: 8px 0;
+  }
+  .table-like th, .table-like td {
+    border: 1px solid #ccc;
+    padding: 5px 7px;
+    text-align: left;
+  }
+  .table-like th { background: #eee; font-weight: 600; }
+
+  .checklist {
+    background: #fbfbf5;
+    border: 2px solid #666;
+    padding: 14px 16px;
+  }
+  .checklist .c-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .checklist .c-sub { font-size: 11px; color: #555; margin-bottom: 10px; }
+  .checklist .c-item { margin: 8px 0; font-size: 12px; }
+  .checklist .c-item .code { font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: #555; }
+
+  .legend {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+    padding: 10px 16px;
+    background: #fff;
+    border: 1px dashed #888;
+    font-size: 11px;
+    color: #555;
+  }
+  .legend ul { margin: 4px 0 0; padding-left: 18px; }
+
+  .annotation {
+    font-size: 11px;
+    color: #8a4a00;
+    font-style: italic;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <h1>Wireframe V2 · Análise Comparativa entre Referências</h1>
+  <p>Acompanha <code>/specs/spec_v2.md</code> · obrigatório Família A · D-149 · dupla aprovação B.2</p>
+  <p>Neutro em identidade visual · Frente A parqueada (D-015 Camada B) · foco: fluxo + estrutura</p>
+  <p>Aprovação simultânea à Spec textual · obsolescência cosmética pós-Frente A tolerada · fluxo funcional permanece válido</p>
+</div>
+
+<div class="nav">
+  <strong>Tela:</strong>
+  <a href="#tela-vazio">0 · Vazio</a>
+  <a href="#tela-e1">1 · E1 Origem</a>
+  <a href="#tela-e2">2 · E2 Estrutura</a>
+  <a href="#tela-e3">3 · E3 O que comparar</a>
+  <a href="#tela-e4">4 · E4 Como agrupar</a>
+  <a href="#tela-interm">5 · Bloco intermediário</a>
+  <a href="#tela-e5">6 · E5 Revisão</a>
+  <a href="#tela-proc">7 · Processando</a>
+  <a href="#tela-resultado">8 · Resultado</a>
+  <a href="#tela-checklist">9 · Checklist Validação Visual</a>
+  <a href="#tela-erro">10 · Estado Erro (exemplo)</a>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- 0 · VAZIO (pré-E1)                                             -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-vazio">
+  <div class="screen-title">Tela 0 · Estado Vazio · pré-upload</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Aplicar modelo</button>
+        <button class="btn ghost" disabled>Salvar como modelo</button>
+      </div>
+    </div>
+
+    <div class="stepper">
+      <div class="step active"><span class="step-number">E1</span>Origem</div>
+      <div class="step locked"><span class="step-number">E2</span>Estrutura</div>
+      <div class="step locked"><span class="step-number">E3</span>O que comparar</div>
+      <div class="step locked"><span class="step-number">E4</span>Como agrupar</div>
+      <div class="step locked"><span class="step-number">E5</span>Revisão</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Início da análise <span class="muted">— suba um arquivo para começar</span></div>
+
+      <label class="field-label">Arquivo de dados</label>
+      <div class="helper-text">Aceita Excel (.xlsx, .xls) e CSV. O arquivo pode ter múltiplas abas — você escolherá qual analisar no próximo passo.</div>
+      <button class="btn primary">Selecionar arquivo...</button>
+
+      <div class="annotation">Anotação · nenhum arquivo selecionado. Stepper trava E2-E5. Header tem botões de ajuda e modelo sempre visíveis (§13.1 · §13.3).</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 1 · E1 · Origem dos dados (após upload)                        -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-e1">
+  <div class="screen-title">Tela 1 · E1 Origem dos dados · pós-upload</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Aplicar modelo</button>
+        <button class="btn ghost" disabled>Salvar como modelo</button>
+      </div>
+    </div>
+
+    <div class="stepper">
+      <div class="step active"><span class="step-number">E1</span>Origem</div>
+      <div class="step locked"><span class="step-number">E2</span>Estrutura</div>
+      <div class="step locked"><span class="step-number">E3</span>O que comparar</div>
+      <div class="step locked"><span class="step-number">E4</span>Como agrupar</div>
+      <div class="step locked"><span class="step-number">E5</span>Revisão</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">E1 · Origem dos dados</div>
+
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Arquivo</label>
+          <span class="form-control full">base_v2_cliente.xlsx (85 KB)</span>
+          <div class="helper-text">Trocar arquivo vai invalidar as próximas etapas.</div>
+        </div>
+        <div class="col">
+          <label class="field-label">Aba a analisar</label>
+          <span class="form-control full">▾ vendas_padrao</span>
+          <div class="helper-text">Selecione qual aba da planilha você quer comparar.</div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Resumo E1</span><br>
+        Arquivo: <strong>base_v2_cliente.xlsx</strong> · Aba: <strong>vendas_padrao</strong> · <strong>120 linhas</strong> detectadas
+      </div>
+
+      <div style="text-align: right;">
+        <button class="btn primary">Avançar para E2 →</button>
+      </div>
+
+      <div class="annotation">Anotação · se arquivo ilegível → <code>B-V2-ARQUIVO-ILEGIVEL</code>. Se aba sem dado → <code>B-V2-ESTRUTURA-INVALIDA</code>. Trocar aba invalida E2-E5 com aviso.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 2 · E2 · Estrutura da comparação                               -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-e2">
+  <div class="screen-title">Tela 2 · E2 Estrutura da comparação · POR_LINHAS Modo 4</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Aplicar modelo</button>
+        <button class="btn ghost" disabled>Salvar como modelo</button>
+      </div>
+    </div>
+
+    <div class="stepper">
+      <div class="step done"><span class="step-number">E1</span>Origem ✓</div>
+      <div class="step active"><span class="step-number">E2</span>Estrutura</div>
+      <div class="step locked"><span class="step-number">E3</span>O que comparar</div>
+      <div class="step locked"><span class="step-number">E4</span>Como agrupar</div>
+      <div class="step locked"><span class="step-number">E5</span>Revisão</div>
+    </div>
+
+    <div class="summary-card">
+      <span class="label">Resumo E1</span>
+      Arquivo: base_v2_cliente.xlsx · Aba: vendas_padrao · 120 linhas detectadas
+      <button class="btn ghost" style="float:right; margin-top:-2px;">Editar</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">E2 · Estrutura da comparação</div>
+
+      <label class="field-label">Como os dois estados estão na base?</label>
+      <div style="margin: 6px 0 12px;">
+        <span class="radio">
+          <span class="dot"></span>
+          <span><strong>POR_COLUNAS</strong> — os estados são colunas diferentes da mesma base<br>
+            <span class="helper-text">Ex: coluna <code>Receita_Orcado</code> e coluna <code>Receita_Realizado</code></span>
+          </span>
+        </span>
+        <br>
+        <span class="radio selected">
+          <span class="dot"></span>
+          <span><strong>POR_LINHAS</strong> — os estados aparecem como valores de uma coluna discriminadora<br>
+            <span class="helper-text">Ex: coluna <code>Mes</code> com valores <code>2025-01</code> e <code>2025-02</code></span>
+          </span>
+        </span>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Coluna discriminadora</label>
+          <span class="form-control full">▾ Mes</span>
+          <div class="helper-text">Coluna cujos valores serão comparados entre si.</div>
+        </div>
+      </div>
+
+      <div class="banner info">
+        <span class="b-title">Modo 4 · escolha 2 entre N valores</span>
+        <span class="b-text">
+          A coluna <code>Mes</code> tem <strong>2</strong> valores únicos, ordenação cronológica detectada.
+          Default: extremos (primeiro e último). Com apenas 2 valores, não há escolha · os 2 entram automaticamente.
+        </span>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Valor para Origem ("Comparar de")</label>
+          <span class="form-control full">▾ 2025-01</span>
+          <label class="field-label" style="margin-top: 8px;">Rótulo amigável Origem</label>
+          <input type="text" class="form-control full" value="Janeiro 2025">
+        </div>
+        <div class="col">
+          <label class="field-label">Valor para Comparado ("Comparar com")</label>
+          <span class="form-control full">▾ 2025-02</span>
+          <label class="field-label" style="margin-top: 8px;">Rótulo amigável Comparado</label>
+          <input type="text" class="form-control full" value="Fevereiro 2025">
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Resumo E2</span><br>
+        Comparar de: <strong>Janeiro 2025</strong> · Comparar com: <strong>Fevereiro 2025</strong> · Estrutura: <strong>POR_LINHAS</strong> (2 valores · Modo 4 dispensado)
+      </div>
+
+      <div style="display:flex; justify-content: space-between;">
+        <button class="btn ghost">← Voltar para E1</button>
+        <button class="btn primary">Avançar para E3 →</button>
+      </div>
+
+      <div class="annotation">Anotação · se coluna discriminadora com 0 valores → <code>B-V2-DISCRIMINADOR-0</code>. Se 1 valor → <code>B-V2-DISCRIMINADOR-1</code>. Se >50 valores únicos → <code>W-V2-NMANY</code>. Tipos mistos → <code>W-V2-MIX</code>.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 3 · E3 · O que comparar                                        -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-e3">
+  <div class="screen-title">Tela 3 · E3 O que comparar · tipo NUMERICO_ADITIVO</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Aplicar modelo</button>
+        <button class="btn ghost" disabled>Salvar como modelo</button>
+      </div>
+    </div>
+
+    <div class="stepper">
+      <div class="step done"><span class="step-number">E1</span>Origem ✓</div>
+      <div class="step done"><span class="step-number">E2</span>Estrutura ✓</div>
+      <div class="step active"><span class="step-number">E3</span>O que comparar</div>
+      <div class="step locked"><span class="step-number">E4</span>Como agrupar</div>
+      <div class="step locked"><span class="step-number">E5</span>Revisão</div>
+    </div>
+
+    <div class="summary-card">
+      <span class="label">Resumo E1 · E2</span>
+      Janeiro 2025 → Fevereiro 2025 · POR_LINHAS · coluna Mes
+      <button class="btn ghost" style="float:right; margin-top:-2px;">Editar</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">E3 · O que comparar</div>
+
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Campo a analisar</label>
+          <span class="form-control full">▾ Vendas</span>
+          <div class="helper-text">Campo numérico ou de estado sobre o qual Δ e Δ% serão calculados.</div>
+        </div>
+
+        <div class="col">
+          <label class="field-label">Tipo do campo (D-025)</label>
+          <span class="form-control full">▾ Numérico aditivo</span>
+          <div class="helper-text">Se soma faz sentido (receita, quantidade). Ver as 4 opções no dropdown.</div>
+        </div>
+
+        <div class="col">
+          <label class="field-label">Semântica (T-SEMA)</label>
+          <span class="form-control full">▾ Maior é melhor</span>
+          <div class="helper-text">Como interpretar o aumento: bom, ruim ou neutro?</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label class="field-label">
+            <span class="check checked"><span class="box"></span></span>
+            Minha base já está pré-agregada (1 linha por chave)
+          </label>
+          <div class="helper-text">Toggle condicional · ativo apenas para tipos relativo e não-aditivo. Para aditivo padrão, motor aplica T-AGRUPA com a regra escolhida em E4.</div>
+        </div>
+      </div>
+
+      <details>
+        <summary style="cursor:default; font-size: 12px; font-weight: 600; margin: 8px 0;">▸ Configurações avançadas · Thresholds editáveis (TED)</summary>
+        <table class="table-like">
+          <tr><th>Threshold</th><th>Default</th><th>Valor atual</th><th>Camada</th></tr>
+          <tr><td>Limiar de estabilidade (%)</td><td>1.0</td><td>1.0</td><td>Semântica</td></tr>
+          <tr><td>Limiar nulo massivo (%)</td><td>20.0</td><td>20.0</td><td>Qualidade</td></tr>
+          <tr><td>Limite valores discriminador</td><td>50</td><td>50</td><td>Estrutura</td></tr>
+          <tr><td>Limite variação extrema (%)</td><td>1000</td><td>1000</td><td>Top variações</td></tr>
+        </table>
+      </details>
+
+      <div class="summary-card">
+        <span class="label">Resumo E3</span><br>
+        Campo: <strong>Vendas</strong> · Tipo: <strong>Numérico aditivo</strong> · Semântica: <strong>Maior é melhor</strong>
+      </div>
+
+      <div style="display:flex; justify-content: space-between;">
+        <button class="btn ghost">← Voltar para E2</button>
+        <button class="btn primary">Avançar para E4 →</button>
+      </div>
+
+      <div class="annotation">Anotação · 100% de nulos em um lado → <code>B-V2-CAMPO-100-NULO</code>. Nulo massivo (&gt;20%) → <code>W-V2-NULL-MASS</code>. Método consolidação aparece só para tipos relativo/não-aditivo (D-024). Pré-agregado com duplicata → <code>W-V2-PAGREG-DUP</code>.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 4 · E4 · Como agrupar (zona alerta leve · ≥4 agrupadores)       -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-e4">
+  <div class="screen-title">Tela 4 · E4 Como agrupar · patamar P2-AGRUP-ALERTA-LEVE</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Aplicar modelo</button>
+        <button class="btn ghost">Salvar como modelo</button>
+      </div>
+    </div>
+
+    <div class="stepper">
+      <div class="step done"><span class="step-number">E1</span>Origem ✓</div>
+      <div class="step done"><span class="step-number">E2</span>Estrutura ✓</div>
+      <div class="step done"><span class="step-number">E3</span>O que comparar ✓</div>
+      <div class="step active"><span class="step-number">E4</span>Como agrupar</div>
+      <div class="step locked"><span class="step-number">E5</span>Revisão</div>
+    </div>
+
+    <div class="summary-card">
+      <span class="label">Resumo E1 · E2 · E3</span>
+      Janeiro 2025 → Fevereiro 2025 · POR_LINHAS (Mes) · Campo <strong>Vendas</strong> · Numérico aditivo · Maior é melhor
+      <button class="btn ghost" style="float:right; margin-top:-2px;">Editar</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">E4 · Como agrupar</div>
+
+      <label class="field-label">Agrupadores (1 a 9 · D-027)</label>
+      <div style="margin: 6px 0 12px;">
+        <span class="check checked"><span class="box"></span> Produto</span>
+        <span class="check checked"><span class="box"></span> Filial</span>
+        <span class="check checked"><span class="box"></span> Cliente</span>
+        <span class="check checked"><span class="box"></span> Canal</span>
+        <span class="check"><span class="box"></span> Região</span>
+        <span class="check"><span class="box"></span> Vendedor</span>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Regra de agregação (T-AGRUPA)</label>
+          <span class="form-control full">▾ Soma</span>
+          <div class="helper-text">Default para Numérico aditivo. Opções: Soma · Média · Máximo · Mínimo · Contagem.</div>
+        </div>
+      </div>
+
+      <div class="banner warn">
+        <span class="b-title">⚠ Granularidade média · P2-AGRUP-ALERTA-LEVE</span>
+        <span class="b-text">
+          4 agrupadores selecionados · estimativa de <strong>~850 linhas</strong> no resultado.
+          Fica confortável. Para análise mais ampla, considere remover algum agrupador.
+        </span>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Resumo E4</span><br>
+        Agrupadores: <strong>Produto · Filial · Cliente · Canal</strong> · Agregação: <strong>Soma</strong> · Estimativa: <strong>~850 linhas</strong>
+      </div>
+
+      <div style="display:flex; justify-content: space-between;">
+        <button class="btn ghost">← Voltar para E3</button>
+        <button class="btn primary">Analisar estrutura e prosseguir →</button>
+      </div>
+
+      <div class="annotation">Anotação · 6-8 agrupadores → checkbox obrigatório "entendo o impacto" + <code>W-V2-AGRUP-MUITOS</code>. ≥9 agrupadores → <code>B-V2-AGRUP-EXCESSO</code> (bloqueio não-escapável). Estimativa calculada por produto de cardinalidades (sem materializar cartesiano real · performance).</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 5 · Bloco intermediário · Resolução de caso estrutural          -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-interm">
+  <div class="screen-title">Tela 5 · Bloco intermediário condicional · Resolução de caso estrutural (D-021)</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+      </div>
+    </div>
+
+    <div class="stepper">
+      <div class="step done"><span class="step-number">E1</span>Origem ✓</div>
+      <div class="step done"><span class="step-number">E2</span>Estrutura ✓</div>
+      <div class="step done"><span class="step-number">E3</span>O que comparar ✓</div>
+      <div class="step done"><span class="step-number">E4</span>Como agrupar ✓</div>
+      <div class="step locked"><span class="step-number">E5</span>Aguardando resolução</div>
+    </div>
+
+    <div class="banner danger">
+      <span class="b-title">⛔ Inconsistência estrutural detectada · precisa de sua decisão</span>
+      <span class="b-text">
+        Ao preparar a análise, o motor encontrou uma diferença estrutural entre os dois lados que não é um ajuste leve.
+        Nada vai ser decidido por você silenciosamente · você escolhe como proceder (princípio C.5).
+      </span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Caso detectado: <code>NIVEL_AGRUPAMENTO_DIFERENTE</code></div>
+
+      <p style="font-size: 12px;">
+        A Origem (<strong>Janeiro 2025</strong>) tem o agrupador <code>Cliente</code> com 45 valores únicos.<br>
+        O Comparado (<strong>Fevereiro 2025</strong>) tem o mesmo agrupador com 87 valores únicos.<br>
+        O Comparado tem granularidade mais fina — comparar nesse nível pode inflar artificialmente a quantidade de AUSENTE_ORIGEM.
+      </p>
+
+      <label class="field-label">Escolha como proceder:</label>
+      <div style="margin: 8px 0;">
+        <span class="radio selected">
+          <span class="dot"></span>
+          <span><strong>Opção (a)</strong> — Agregar o lado Comparado ao nível da Origem · perde-se detalhe fino do Comparado, mas comparação fica equivalente</span>
+        </span>
+        <br>
+        <span class="radio">
+          <span class="dot"></span>
+          <span><strong>Opção (b)</strong> — Escolher um nível comum de agrupamento · voltar a E4 e ajustar lista de agrupadores</span>
+        </span>
+        <br>
+        <span class="radio">
+          <span class="dot"></span>
+          <span><strong>Opção (c)</strong> — Cancelar análise</span>
+        </span>
+      </div>
+
+      <div style="display:flex; justify-content: space-between; margin-top: 14px;">
+        <button class="btn danger">Cancelar análise</button>
+        <button class="btn primary">Confirmar escolha e prosseguir →</button>
+      </div>
+
+      <div class="annotation">Anotação · esta tela aparece só quando motor detecta um dos 5 casos estruturais da Seção 2.4. Inconsistências leves (4 tipos) são ajustadas silenciosamente mas registradas como <code>AJUSTE_LEVE</code> no Diagnóstico + <code>W-V2-AJUSTE-LEVE</code>. Cancelar → <code>B-V2-CASO-ESTRUTURAL-CANCELADO</code>. Escolher → registrado como <code>DECISAO_USUARIO</code> + <code>W-V2-DECISAO-USUARIO</code>.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 6 · E5 · Revisão e execução                                    -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-e5">
+  <div class="screen-title">Tela 6 · E5 Revisão e execução</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Salvar como modelo</button>
+      </div>
+    </div>
+
+    <div class="stepper">
+      <div class="step done"><span class="step-number">E1</span>Origem ✓</div>
+      <div class="step done"><span class="step-number">E2</span>Estrutura ✓</div>
+      <div class="step done"><span class="step-number">E3</span>O que comparar ✓</div>
+      <div class="step done"><span class="step-number">E4</span>Como agrupar ✓</div>
+      <div class="step active"><span class="step-number">E5</span>Revisão</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Revisão da configuração · preview compacto</div>
+
+      <table class="table-like">
+        <tr>
+          <th style="width:25%;">Etapa</th>
+          <th>Configuração</th>
+          <th style="width:12%;">Ação</th>
+        </tr>
+        <tr>
+          <td>E1 · Origem</td>
+          <td>base_v2_cliente.xlsx · vendas_padrao · 120 linhas</td>
+          <td><button class="btn ghost">Editar</button></td>
+        </tr>
+        <tr>
+          <td>E2 · Estrutura</td>
+          <td>POR_LINHAS · Mes · Janeiro 2025 → Fevereiro 2025</td>
+          <td><button class="btn ghost">Editar</button></td>
+        </tr>
+        <tr>
+          <td>E3 · Campo</td>
+          <td>Vendas · Numérico aditivo · Maior é melhor</td>
+          <td><button class="btn ghost">Editar</button></td>
+        </tr>
+        <tr>
+          <td>E4 · Agrupadores</td>
+          <td>Produto · Filial · Cliente · Canal · Agregação: Soma · ~850 linhas</td>
+          <td><button class="btn ghost">Editar</button></td>
+        </tr>
+        <tr>
+          <td>Bloco intermediário</td>
+          <td>NIVEL_AGRUPAMENTO_DIFERENTE · escolha: (a) Agregar Comparado ao nível da Origem</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>TED · thresholds</td>
+          <td>Todos em default · estabilidade 1% · nulo massivo 20% · discr 50 · variação extrema 1000%</td>
+          <td><button class="btn ghost">Editar</button></td>
+        </tr>
+      </table>
+
+      <div class="banner info" style="margin-top: 12px;">
+        <span class="b-title">📋 Pronto para processar</span>
+        <span class="b-text">Ao confirmar, o motor executa o pipeline determinístico (Preparação · Detecção · Consolidação · Cálculo · Semântica · Exportação) e gera o Excel com 5 abas.</span>
+      </div>
+
+      <div style="display:flex; justify-content: space-between; margin-top: 14px;">
+        <button class="btn ghost">← Voltar</button>
+        <button class="btn primary">▶ Processar análise</button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 7 · Processando                                                 -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-proc">
+  <div class="screen-title">Tela 7 · Processando</div>
+  <div class="screen-body">
+
+    <div class="panel" style="text-align:center;">
+      <div class="panel-title" style="text-align:left;">Processando análise · aguarde</div>
+
+      <div style="margin: 20px 0;">
+        <div style="display:inline-block; width: 60%; height: 14px; border: 1px solid #666; background: #f0f0f0; position: relative;">
+          <div style="position: absolute; left: 0; top: 0; height: 100%; width: 65%; background: #444;"></div>
+        </div>
+        <p style="margin: 10px 0 0; font-size: 12px; color: #555;">Etapa 4 de 6 · Cálculo comparativo</p>
+      </div>
+
+      <table class="table-like" style="max-width: 500px; margin: 0 auto; text-align: left;">
+        <tr><td>Preparação da base</td><td>✓ 0.12s</td></tr>
+        <tr><td>Detecção de casos estruturais</td><td>✓ 0.03s</td></tr>
+        <tr><td>Consolidação pré-cálculo (CPCO)</td><td>✓ 0.28s</td></tr>
+        <tr><td><strong>Cálculo comparativo</strong></td><td>⋯ em curso</td></tr>
+        <tr><td>Camada semântica (T-SEMA)</td><td>—</td></tr>
+        <tr><td>Agregações para exportação</td><td>—</td></tr>
+      </table>
+
+      <div class="annotation">Anotação · tempos por etapa vão para o Diagnóstico (T-DIAG) · requisito performance item 7 do DCV §11.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 8 · Resultado                                                   -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-resultado">
+  <div class="screen-title">Tela 8 · Resultado · pré-Validação Visual</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Salvar como modelo</button>
+        <button class="btn ghost">Nova análise</button>
+      </div>
+    </div>
+
+    <div class="banner success">
+      <span class="b-title">✅ Análise concluída</span>
+      <span class="b-text">Janeiro 2025 → Fevereiro 2025 · Vendas · 850 combinações analisadas · 2 warnings estruturais. Agora faça a Validação Visual antes de exportar.</span>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="k-label">Total Origem (Jan)</div><div class="k-value">R$ 4,82M</div></div>
+      <div class="kpi"><div class="k-label">Total Comparado (Fev)</div><div class="k-value">R$ 5,13M</div></div>
+      <div class="kpi"><div class="k-label">Diferença</div><div class="k-value" style="color: #2d5a2d;">+R$ 0,31M</div></div>
+      <div class="kpi"><div class="k-label">Variação %</div><div class="k-value" style="color: #2d5a2d;">+6,4%</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Previews disponíveis</div>
+      <div class="row">
+        <div class="col">
+          <button class="btn ghost full" style="width: 100%;">📋 Ver Resumo Executivo (6 blocos)</button>
+        </div>
+        <div class="col">
+          <button class="btn ghost full" style="width: 100%;">🧩 Ver Matriz de Confronto (Coração Visual)</button>
+        </div>
+        <div class="col">
+          <button class="btn ghost full" style="width: 100%;">🔍 Ver Diagnóstico (última aba)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Próximo passo · Validação Visual <span class="muted">— obrigatória antes de exportar (B.4)</span></div>
+      <p style="font-size: 12px; margin: 6px 0;">
+        Para a visão ser concluída, você marca 4 itens ✅ derivados do gabarito de testes (D-148).
+        Qualquer item ❌ trava a exportação e dispara investigação.
+      </p>
+      <div style="text-align: right;">
+        <button class="btn primary">Abrir checklist de Validação Visual →</button>
+        <button class="btn ghost" disabled title="Trava até todos os itens ✅">⬇ Baixar Excel (5 abas)</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 9 · Checklist de Validação Visual                               -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-checklist">
+  <div class="screen-title">Tela 9 · Checklist de Validação Visual V2 · gate final B.4</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">← Voltar ao Resultado</button>
+      </div>
+    </div>
+
+    <div class="checklist">
+      <div class="c-title">Checklist de Validação Visual · V2</div>
+      <div class="c-sub">
+        Derivado mecanicamente de <code>casos_esperados.yaml</code> bloco <code>visoes.V2</code> via 5 templates canônicos (D-148).
+        Todos os itens devem estar ✅ para exportar o Excel. Qualquer ❌ → o Arquiteto investiga em sessão dedicada.
+      </div>
+
+      <div class="c-item">
+        <span class="check"><span class="box"></span></span>
+        <strong>Item 1</strong> · <span class="code">V2-A01 · contagem_categoria</span><br>
+        O resultado mostra entre <strong>2 e 4</strong> elementos ausentes em um lado em <code>Produto</code> na aba <code>vendas_padrao</code> <span class="code">(warning associado: W-V2-AUSENTE-EM-UM-LADO)</span>?
+      </div>
+
+      <div class="c-item">
+        <span class="check"><span class="box"></span></span>
+        <strong>Item 2</strong> · <span class="code">V2-A02 · warning_presente</span><br>
+        O warning <code>W-NULO-MEDIDA</code> aparece no Diagnóstico com <strong>3–4</strong> ocorrência(s)?
+      </div>
+
+      <div class="c-item">
+        <span class="check"><span class="box"></span></span>
+        <strong>Item 3</strong> · <span class="code">V2-A03 · estrutura_saida</span><br>
+        O Excel tem Resumo Executivo com <strong>6</strong> blocos e aba Coração Visual nomeada <strong>"Matriz de Confronto"</strong>?
+      </div>
+
+      <div class="c-item">
+        <span class="check"><span class="box"></span></span>
+        <strong>Item 4</strong> · <span class="code">V2-A04 · contagem_exata</span><br>
+        O resultado mostra exatamente <strong>2</strong> estados distintos (2025-01 e 2025-02) em <code>Mes</code> na aba <code>vendas_padrao</code>?
+      </div>
+
+      <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed #888;">
+        <div class="row">
+          <div class="col">
+            <button class="btn danger">⚠ Marcar ❌ e abrir investigação</button>
+          </div>
+          <div class="col" style="text-align: right;">
+            <button class="btn primary" disabled title="Habilita quando os 4 itens estão ✅">✅ Aprovar visão e exportar Excel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation">Anotação · itens 1:1 com as 4 assertions do YAML · sem adição ad-hoc (C.2 · D-148). Aprovação final registra 5º quadrado ✅ na aba 2 da planilha · marcador "V2 validada".</div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- 10 · Estado Erro (exemplo · bloqueio não-escapável)             -->
+<!-- ============================================================ -->
+<section class="screen" id="tela-erro">
+  <div class="screen-title">Tela 10 · Estado Erro · exemplo com B-V2-AGRUP-EXCESSO</div>
+  <div class="screen-body">
+
+    <div class="app-header">
+      <span class="title">V2 · Análise Comparativa entre Referências</span>
+      <div class="btn-row">
+        <button class="btn ghost">Objetivo da Visão</button>
+        <button class="btn ghost">Nova análise</button>
+      </div>
+    </div>
+
+    <div class="banner danger">
+      <span class="b-title">⛔ Bloqueio operacional · B-V2-AGRUP-EXCESSO</span>
+      <span class="b-text">
+        V2 não opera com 10 ou mais agrupadores. Com essa quantidade, a análise fica ilegível e a estimativa ultrapassa os limites da ferramenta.<br>
+        <strong>Sugestão:</strong> remover agrupadores até 8 ou menos, ou usar a <strong>V6 · Relacionamento entre Dimensões</strong> para análise de múltiplas dimensões cruzadas.
+      </span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Contexto do bloqueio</div>
+      <table class="table-like">
+        <tr><th>Campo</th><th>Valor</th></tr>
+        <tr><td>Código</td><td><code>B-V2-AGRUP-EXCESSO</code></td></tr>
+        <tr><td>Escapável?</td><td>Não</td></tr>
+        <tr><td>Agrupadores declarados</td><td>10</td></tr>
+        <tr><td>Limite operacional</td><td>9</td></tr>
+        <tr><td>Sugestão V6</td><td>sim</td></tr>
+      </table>
+
+      <div style="display:flex; justify-content: space-between; margin-top: 12px;">
+        <button class="btn ghost">← Voltar para E4 (remover agrupadores)</button>
+        <button class="btn ghost">Nova análise (limpar tudo)</button>
+      </div>
+
+      <div class="annotation">Anotação · nenhum dos 10 bloqueios B-V2-* é escapável. Estado Erro não tem botão "Forçar mesmo assim". C.5 aplicado.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- Legenda de convenções do wireframe                              -->
+<!-- ============================================================ -->
+<div class="legend">
+  <strong>Legenda do wireframe</strong>
+  <ul>
+    <li><strong>Elementos cinza / tracejados</strong> representam placeholders · não são parte da identidade visual final.</li>
+    <li><strong>Cores semânticas</strong> (verde · amarelo · vermelho · azul) representam categoria de mensagem (sucesso · alerta · erro · info), não paleta definitiva — serão redefinidas quando Frente A for ativada.</li>
+    <li><strong>Stepper</strong>: cinza = travada · branco com outline = ativa · verde = concluída.</li>
+    <li><strong>Anotações em itálico marrom</strong> são notas ao Arquiteto/Claude Code sobre gatilhos, bloqueios e warnings da Spec · não aparecem no app final.</li>
+    <li>Cada tela corresponde a um estado discreto do fluxo · §13.2 aplicado (etapa N só fica disponível quando N-1 concluída · edição invalida cascata · etapas concluídas mostram resumo compacto).</li>
+    <li>Este wireframe foca <strong>fluxo e estrutura de tela</strong>, não estética. Aprovação cosmética acontece na Frente A.</li>
+  </ul>
+</div>
+
+</body>
+</html>

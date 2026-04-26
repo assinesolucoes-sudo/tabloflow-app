@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe V1 v2 · Conciliação de Bases · TabloFlow</title>
+<style>
+  /* Frente A parqueada · D-015 Camada B · neutro em identidade visual */
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --border: #d4d4d4;
+    --border-soft: #e5e5e5;
+    --ink: #1a1a1a;
+    --ink-soft: #525252;
+    --ink-mute: #8a8a8a;
+    --accent: #404040;
+    --accent-soft: #ededed;
+    --accent-bright: #2563eb;
+    --warn: #b45309;
+    --warn-soft: #fef3c7;
+    --ok: #166534;
+    --ok-soft: #dcfce7;
+    --info: #1e40af;
+    --info-soft: #dbeafe;
+    --err: #991b1b;
+    --err-soft: #fee2e2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    padding: 20px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  h2 {
+    font-size: 14px; font-weight: 600;
+    margin: 32px 0 12px;
+    padding: 8px 12px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+  }
+  h3 { font-size: 13px; font-weight: 600; margin: 16px 0 8px; color: var(--ink-soft); }
+  p { font-size: 13px; color: var(--ink-soft); margin-bottom: 12px; }
+  .meta {
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .legend {
+    background: #fff5e6;
+    border: 1px solid #fbbf24;
+    padding: 12px;
+    font-size: 11px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+  }
+  .legend strong { display: block; margin-bottom: 4px; }
+  .screen {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .screen-tag {
+    background: var(--accent-soft);
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-family: monospace;
+    display: flex;
+    justify-content: space-between;
+  }
+  .screen-body { padding: 24px; }
+
+  /* Header persistente · espelho V2 */
+  .app-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .header-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .header-btn {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 2px;
+    text-align: center;
+  }
+  .header-btn:disabled, .header-btn.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* TED expander · espelho V2 */
+  .ted-expander {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    margin-bottom: 12px;
+    border-radius: 2px;
+  }
+  .ted-summary {
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ted-summary::before { content: "▶"; font-size: 10px; }
+  details[open] .ted-summary::before { content: "▼"; }
+  .ted-body {
+    padding: 12px;
+    border-top: 1px solid var(--border-soft);
+    background: var(--bg);
+  }
+  .ted-row {
+    display: flex; justify-content: space-between;
+    padding: 6px 0;
+    font-size: 11px;
+    border-bottom: 1px dashed var(--border-soft);
+  }
+  .ted-row:last-child { border-bottom: none; }
+  .ted-row .ted-label { color: var(--ink-soft); flex: 1; }
+  .ted-row .ted-value {
+    font-family: monospace;
+    color: var(--ink-mute);
+  }
+  .ted-row .ted-status {
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-left: 8px;
+    font-style: italic;
+  }
+  .ted-row .ted-status.edited { color: var(--warn); font-weight: 600; }
+
+  /* Stepper horizontal · espelho V2 */
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-bottom: 12px;
+    padding: 8px 0;
+  }
+  .stepper-item {
+    font-size: 12px;
+    color: var(--ink-mute);
+    text-align: center;
+    padding: 6px 4px;
+    font-weight: 600;
+  }
+  .stepper-item.done { color: var(--ok); }
+  .stepper-item.active { color: var(--ink); }
+  .stepper-item.future { color: var(--ink-mute); font-weight: 400; }
+  .divider {
+    border-top: 1px solid var(--border);
+    margin: 12px 0 16px;
+  }
+
+  /* Conteúdo das telas */
+  .subheader {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .caption {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+  }
+  .field-group { margin-bottom: 16px; }
+  .label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--ink); }
+  .help { font-size: 11px; color: var(--ink-mute); margin-top: 4px; }
+  .input, .select, .textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    border-radius: 2px;
+    font-family: inherit;
+  }
+  .input::placeholder { color: var(--ink-mute); font-style: italic; }
+  .radio-group { display: flex; gap: 16px; }
+  .radio-group.vertical { flex-direction: column; gap: 6px; }
+  .radio-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .radio-row input { width: auto; }
+  .row { display: flex; gap: 12px; }
+  .col { flex: 1; }
+  .upload-zone {
+    border: 2px dashed var(--border);
+    padding: 32px;
+    text-align: center;
+    color: var(--ink-mute);
+    font-size: 12px;
+    border-radius: 2px;
+    background: var(--bg);
+  }
+  .upload-zone.filled {
+    border: 1px solid var(--ok);
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+  .card {
+    border: 1px solid var(--border);
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border-radius: 4px;
+  }
+  .card-header {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .btn-add {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    color: var(--ink-soft);
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .button-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .alert-info {
+    background: var(--info-soft);
+    border-left: 3px solid var(--info);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--info);
+    margin: 12px 0;
+    border-radius: 2px;
+  }
+  .alert-warn {
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--warn);
+    margin: 12px 0;
+    border-radius: 2px;
+  }
+  .alert-ok {
+    background: var(--ok-soft);
+    border-left: 3px solid var(--ok);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--ok);
+    margin: 12px 0;
+    border-radius: 2px;
+  }
+  .alert-err {
+    background: var(--err-soft);
+    border-left: 3px solid var(--err);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--err);
+    margin: 12px 0;
+    border-radius: 2px;
+  }
+
+  /* Resultado · st.metric */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    padding: 16px;
+    border-radius: 4px;
+  }
+  .metric-label { font-size: 11px; color: var(--ink-mute); margin-bottom: 4px; text-transform: uppercase; }
+  .metric-value { font-size: 22px; font-weight: 700; }
+  .metric-delta { font-size: 11px; color: var(--ink-mute); margin-top: 4px; }
+  .metric.highlight { background: var(--accent-soft); border-color: var(--accent); }
+
+  /* Tabela */
+  .table-wrapper {
+    border: 1px solid var(--border-soft);
+    margin-bottom: 16px;
+    border-radius: 2px;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--accent-soft); padding: 8px; text-align: left; font-weight: 600; border-bottom: 1px solid var(--border); }
+  td { padding: 8px; border-bottom: 1px solid var(--border-soft); }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .total-row td { background: var(--accent-soft); font-weight: 700; border-top: 1px solid var(--border); }
+
+  /* Banner de status */
+  .banner-status {
+    padding: 16px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .banner-ok { background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok); }
+  .banner-warn { background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); }
+
+  /* Resumo das 5 colunas (E5) */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .summary-col {
+    border: 1px solid var(--border-soft);
+    padding: 12px;
+    border-radius: 2px;
+    background: var(--bg);
+  }
+  .summary-col-title {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .summary-col-body { font-size: 11px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* Spinner placeholder */
+  .spinner-zone {
+    text-align: center;
+    padding: 64px 32px;
+    color: var(--ink-mute);
+  }
+  .spinner-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: inline-block;
+    animation: spin 1.5s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Rodapé do RESULTADO · paleta + Baixar */
+  .result-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: 12px;
+    align-items: end;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  /* Note */
+  .note {
+    background: var(--bg);
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 12px;
+    border-radius: 2px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Wireframe V1 v2 · Conciliação de Bases · TabloFlow</h1>
+<div class="meta">
+  S-V1 v2 · D-149 · Família A · estático · neutro em identidade visual ·
+  <strong>Espelho fiel do <code>app_v2.py</code></strong> (suite 746/746 verde · referência canônica) ·
+  Frente A parqueada · D-015 Camada B · paleta cinza monocromática serve de placeholder ·
+  paleta executiva real (Azul · Cinza · Verde · Vinho · D-168) aplicada em F-APRESENT capability 1
+</div>
+
+<div class="legend">
+  <strong>Sobre este wireframe</strong>
+  Estrutura macro herdada literalmente do app V2 que está rodando: layout top-down sem sidebar lateral ·
+  header com 4 botões (Objetivo · Aplicar modelo · Salvar como modelo · Nova análise) ·
+  stepper horizontal abaixo do header · TED em expander "⚙️ Configurações avançadas" no topo (D-178) ·
+  cada etapa é uma tela própria com subheader + caption + conteúdo + divider + botões Voltar/Avançar ·
+  paleta no rodapé do RESULTADO (D-175 §5.4 · D-212).
+  <br><br>
+  Adaptações V1: E1 ganha radio inicial "Quantos arquivos?" · E1_OK escolhe 1-2 abas ·
+  E2 reduzida (sem POR_LINHAS/POR_COLUNAS · só rótulos) · E3 mergeada (agrupadores match + campos comparados) ·
+  E4 só "Agrupadores executivos" · E5 com 5 colunas-resumo · RESULTADO com 5 blocos.
+  <br><br>
+  Decisões refletidas: D-210 (Q1.B PERCENTUAL fora da Ponte) · D-211 (Q2.C TED por unidade) ·
+  D-212 (paleta no rodapé · TED em expander · E4 limpa) · D-213 (4 casos lógicos · sistema infere automaticamente).
+</div>
+
+<!-- ============================== Estado vazio ============================== -->
+<h2>Estado <code>vazio</code> · Tela inicial · Upload</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=vazio</span>
+    <span>app_v1.py · _tela_vazio()</span>
+  </div>
+  <div class="screen-body">
+
+    <!-- Header persistente -->
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn disabled">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+
+    <!-- TED expander (vazio neste estado) -->
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+      <div class="ted-body">
+        <p class="caption">Os limites editáveis aparecem aqui após você configurar os campos comparados na Etapa 3.</p>
+        <div class="ted-row">
+          <span class="ted-label">Limite de células vazias em coluna de chave</span>
+          <span class="ted-value">50%</span>
+          <span class="ted-status">Default</span>
+        </div>
+        <div class="ted-row">
+          <span class="ted-label">Limite de registros processados</span>
+          <span class="ted-value">500.000</span>
+          <span class="ted-status">Default</span>
+        </div>
+        <div class="ted-row">
+          <span class="ted-label">Limite de concentração para citar agrupador principal</span>
+          <span class="ted-value">70%</span>
+          <span class="ted-status">Default</span>
+        </div>
+      </div>
+    </details>
+
+    <!-- Stepper (não aparece em vazio · padrão V2) -->
+    <div class="divider"></div>
+
+    <!-- Conteúdo da tela vazio -->
+    <div class="subheader">Escolher arquivo(s)</div>
+    <div class="caption">Suba o(s) arquivo(s) Excel ou CSV com os dados que você quer comparar.</div>
+
+    <div class="field-group">
+      <span class="label">Quantos arquivos você vai usar?</span>
+      <div class="radio-group">
+        <label class="radio-row"><input type="radio" name="narq" checked> 1 arquivo</label>
+        <label class="radio-row"><input type="radio" name="narq"> 2 arquivos</label>
+      </div>
+      <p class="help">Aceita Excel (.xlsx, .xls) e CSV. Em 1 arquivo, você escolherá 1 ou 2 abas no próximo passo. Em 2 arquivos, escolherá 1 aba de cada.</p>
+    </div>
+
+    <!-- Caso n_arquivos=1 -->
+    <div class="field-group">
+      <span class="label">Arquivo</span>
+      <div class="upload-zone">📁 Arraste ou selecione um arquivo Excel/CSV</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado E1_OK ============================== -->
+<h2>Estado <code>E1_OK</code> · Pós-upload · Escolher aba(s)</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=E1_OK · n_arquivos=1 · 5 abas detectadas</span>
+    <span>app_v1.py · _tela_e1_ok()</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item active">▶ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item future">· 2 · Identificar lados</div>
+      <div class="stepper-item future">· 3 · Configurar análise</div>
+      <div class="stepper-item future">· 4 · Agrupadores executivos</div>
+      <div class="stepper-item future">· Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="subheader">Escolher arquivo(s)</div>
+
+    <div class="alert-ok">✅ Arquivo: <strong>conciliacao_outubro2025.xlsx</strong> · Formato: xlsx · 5 abas detectadas</div>
+
+    <div class="field-group">
+      <span class="label">Qual(is) aba(s) quer comparar?</span>
+      <select class="select" multiple style="height: 120px">
+        <option selected>Razao_Outubro2025</option>
+        <option>Balancete_Out_2025</option>
+        <option>Conciliacao_Mesma_Aba</option>
+        <option>Apoio_DRE</option>
+        <option>Glossario</option>
+      </select>
+      <p class="help">
+        <strong>Escolha 1 aba</strong> quando Origem e Comparado estão em colunas distintas dentro da mesma aba (Caso 3).
+        <strong>Escolha 2 abas</strong> quando Origem em uma aba · Comparado em outra (Caso 2).
+      </p>
+    </div>
+
+    <div class="button-row">
+      <button class="btn">← Voltar · trocar arquivo</button>
+      <button class="btn btn-primary">Confirmar e processar bases</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado E1_OK · n_arquivos=2 ============================== -->
+<h2>Estado <code>E1_OK</code> · Variante · 2 arquivos uploadados</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=E1_OK · n_arquivos=2</span>
+    <span>app_v1.py · _tela_e1_ok() · ramo n_arquivos=2</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item active">▶ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item future">· 2 · Identificar lados</div>
+      <div class="stepper-item future">· 3 · Configurar análise</div>
+      <div class="stepper-item future">· 4 · Agrupadores executivos</div>
+      <div class="stepper-item future">· Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="subheader">Escolher arquivo(s)</div>
+
+    <div class="alert-ok">✅ Arquivos: <strong>razao_out2025.xlsx</strong> (3 abas) · <strong>balancete_out2025.xlsx</strong> (1 aba)</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="field-group">
+          <span class="label">Aba do arquivo da Origem</span>
+          <select class="select"><option>Razao_Outubro2025</option><option>Razao_Setembro2025</option><option>Apoio</option></select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="field-group">
+          <span class="label">Aba do arquivo do Comparado</span>
+          <select class="select"><option>Sheet1</option></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button class="btn">← Voltar · trocar arquivos</button>
+      <button class="btn btn-primary">Confirmar e processar bases</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado E2 ============================== -->
+<h2>Estado <code>E2</code> · Identificar lados</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=E2</span>
+    <span>app_v1.py · _tela_e2()</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item done">✅ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item active">▶ 2 · Identificar lados</div>
+      <div class="stepper-item future">· 3 · Configurar análise</div>
+      <div class="stepper-item future">· 4 · Agrupadores executivos</div>
+      <div class="stepper-item future">· Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="subheader">Identificar lados</div>
+    <div class="caption">Dê nomes amigáveis para os dois lados da comparação · esses nomes aparecem em todas as telas e no Excel exportado.</div>
+
+    <div class="row">
+      <div class="col">
+        <div class="field-group">
+          <span class="label">Como chamar a Origem</span>
+          <input class="input" placeholder="Ex: Razão · Sistema A · ERP · Orçado" value="Razão">
+        </div>
+      </div>
+      <div class="col">
+        <div class="field-group">
+          <span class="label">Como chamar o Comparado</span>
+          <input class="input" placeholder="Ex: Balancete · Sistema B · DW · Realizado" value="Balancete">
+        </div>
+      </div>
+    </div>
+
+    <p class="help">Se deixar em branco, o sistema usa "Origem" e "Comparado" como padrão. Quando ambos estão preenchidos, classificações estruturais usam formulação direcional ("Saiu do Razão" em vez de "Só na Origem").</p>
+
+    <div class="button-row">
+      <button class="btn">← Voltar</button>
+      <button class="btn btn-primary">Próximo · Configurar análise</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado E3 ============================== -->
+<h2>Estado <code>E3</code> · Configurar análise · 2 sub-blocos + caso lógico inferido</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=E3 · ABAS_DISTINTAS inferido</span>
+    <span>app_v1.py · _tela_e3()</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item done">✅ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item done">✅ 2 · Identificar lados</div>
+      <div class="stepper-item active">▶ 3 · Configurar análise</div>
+      <div class="stepper-item future">· 4 · Agrupadores executivos</div>
+      <div class="stepper-item future">· Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="subheader">Configurar análise</div>
+    <div class="caption">Declare como casar registros e o que comparar entre eles.</div>
+
+    <h3>Agrupadores de match · qual a chave para casar registros entre os dois lados?</h3>
+
+    <div class="card">
+      <div class="card-header">Agrupador 1</div>
+      <div class="row">
+        <div class="col">
+          <span class="label">Coluna na Razão</span>
+          <select class="select"><option>CNPJ</option></select>
+        </div>
+        <div class="col">
+          <span class="label">Coluna no Balancete</span>
+          <select class="select"><option>CNPJ_Forn</option></select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col">
+          <span class="label">Rótulo analítico</span>
+          <input class="input" value="CNPJ do Fornecedor">
+        </div>
+        <div class="col">
+          <span class="label">Modo de match</span>
+          <select class="select"><option>Exato (igualdade total)</option><option>Contém</option><option>Inicia com</option><option>Termina com</option></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Agrupador 2</div>
+      <div class="row">
+        <div class="col">
+          <span class="label">Coluna na Razão</span>
+          <select class="select"><option>Filial</option></select>
+        </div>
+        <div class="col">
+          <span class="label">Coluna no Balancete</span>
+          <select class="select"><option>Filial</option></select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col">
+          <span class="label">Rótulo analítico</span>
+          <input class="input" value="Filial">
+        </div>
+        <div class="col">
+          <span class="label">Modo de match</span>
+          <select class="select"><option>Exato (igualdade total)</option></select>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add">+ Adicionar agrupador (até 5 · L-V1-D)</button>
+
+    <h3 style="margin-top:24px">Campos comparados · quais valores devem bater entre os dois lados?</h3>
+
+    <div class="card">
+      <div class="card-header">Campo 1</div>
+      <div class="row">
+        <div class="col">
+          <span class="label">Coluna na Razão</span>
+          <select class="select"><option>Valor_Bruto</option></select>
+        </div>
+        <div class="col">
+          <span class="label">Coluna no Balancete</span>
+          <select class="select"><option>Valor</option></select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col">
+          <span class="label">Nome analítico</span>
+          <input class="input" value="Valor Bruto">
+        </div>
+        <div class="col">
+          <span class="label">Tipo lógico</span>
+          <select class="select">
+            <option>Valor Monetário</option>
+            <option>Quantidade</option>
+            <option>Volume</option>
+            <option>Percentual</option>
+            <option>Prazo</option>
+            <option>Índice</option>
+            <option>Estado/Situação</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col">
+          <span class="label">Unidade</span>
+          <select class="select"><option>Reais (R$)</option></select>
+        </div>
+        <div class="col">
+          <span class="label">Tolerância absoluta</span>
+          <input class="input" value="R$ 0,01">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add">+ Adicionar campo (até 10 · P-V1-10)</button>
+
+    <div class="alert-info" style="margin-top:24px">
+      📋 <strong>Caso detectado · Origem e Comparado em abas distintas</strong> · será executado match para casar registros.
+      <br><span class="help" style="margin-top:4px;display:block;color:inherit">(O sistema inferiu automaticamente a partir dos apontamentos · Razão e Balancete estão em arquivos diferentes.)</span>
+    </div>
+
+    <div class="button-row">
+      <button class="btn">← Voltar</button>
+      <button class="btn btn-primary">Próximo · Agrupadores executivos</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado E3 · Caso 3 ============================== -->
+<h2>Estado <code>E3</code> · Variante · MESMA_ABA_EM_COLUNAS detectado</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=E3 · MESMA_ABA_EM_COLUNAS inferido</span>
+    <span>app_v1.py · _tela_e3() · ramo Caso 3</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item done">✅ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item done">✅ 2 · Identificar lados</div>
+      <div class="stepper-item active">▶ 3 · Configurar análise</div>
+      <div class="stepper-item future">· 4 · Agrupadores executivos</div>
+      <div class="stepper-item future">· Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="subheader">Configurar análise</div>
+    <div class="caption">Declare como casar registros e o que comparar entre eles.</div>
+
+    <h3>Agrupadores de match · qual a chave para casar registros entre os dois lados?</h3>
+
+    <div class="card">
+      <div class="card-header">Agrupador 1</div>
+      <div class="row">
+        <div class="col">
+          <span class="label">Coluna na Origem</span>
+          <select class="select"><option>CNPJ</option></select>
+        </div>
+        <div class="col">
+          <span class="label">Coluna no Comparado</span>
+          <select class="select"><option>CNPJ</option></select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col">
+          <span class="label">Rótulo analítico</span>
+          <input class="input" value="CNPJ">
+        </div>
+        <div class="col">
+          <span class="label">Modo de match</span>
+          <select class="select" disabled><option>Exato (não aplicável · cada linha é par único)</option></select>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px">Campos comparados · quais valores devem bater entre os dois lados?</h3>
+
+    <div class="card">
+      <div class="card-header">Campo 1</div>
+      <div class="row">
+        <div class="col">
+          <span class="label">Coluna na Origem</span>
+          <select class="select"><option>Valor_Razao</option></select>
+        </div>
+        <div class="col">
+          <span class="label">Coluna no Comparado</span>
+          <select class="select"><option>Valor_Balancete</option></select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col">
+          <span class="label">Nome analítico</span>
+          <input class="input" value="Valor">
+        </div>
+        <div class="col">
+          <span class="label">Tipo lógico</span>
+          <select class="select"><option>Valor Monetário</option></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-info" style="margin-top:24px">
+      📋 <strong>Caso detectado · Origem e Comparado em colunas distintas da mesma aba</strong> · cada linha já é um par casado por construção.
+      <br><span class="help" style="margin-top:4px;display:block;color:inherit">(Não será executado match · valores comparados linha-a-linha. Classificações reduzidas a 2: Conciliado e Divergente por valor.)</span>
+    </div>
+
+    <div class="button-row">
+      <button class="btn">← Voltar</button>
+      <button class="btn btn-primary">Próximo · Agrupadores executivos</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado E4 ============================== -->
+<h2>Estado <code>E4</code> · Agrupadores executivos · OPCIONAL · sem paleta (D-212)</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=E4 · D-212 corrige P-V1 §4.5</span>
+    <span>app_v1.py · _tela_e4()</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+
+    <details class="ted-expander" open>
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+      <div class="ted-body">
+        <p class="caption" style="margin-bottom:8px">TED · Q2.C aplicada · só unidades em uso aparecem.</p>
+        <div class="ted-row">
+          <span class="ted-label">Tolerância de fechamento da Ponte · valores monetários</span>
+          <span class="ted-value">R$ 0,01</span>
+          <span class="ted-status">Default</span>
+        </div>
+        <div class="ted-row">
+          <span class="ted-label">Limite de células vazias em coluna de chave</span>
+          <span class="ted-value">50%</span>
+          <span class="ted-status">Default</span>
+        </div>
+        <div class="ted-row">
+          <span class="ted-label">Limite de registros processados</span>
+          <span class="ted-value">500.000</span>
+          <span class="ted-status">Default</span>
+        </div>
+        <div class="ted-row">
+          <span class="ted-label">Limite de concentração para citar agrupador principal</span>
+          <span class="ted-value">70%</span>
+          <span class="ted-status">Default</span>
+        </div>
+      </div>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item done">✅ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item done">✅ 2 · Identificar lados</div>
+      <div class="stepper-item done">✅ 3 · Configurar análise</div>
+      <div class="stepper-item active">▶ 4 · Agrupadores executivos</div>
+      <div class="stepper-item future">· Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="subheader">Agrupadores executivos</div>
+    <div class="caption">Opcional · quer ver o resultado consolidado por algum recorte?</div>
+
+    <p>Quando configurado, gera tabela consolidada por filial / centro de custo / outro recorte na aba <strong>"Resumo por Agrupador"</strong>.</p>
+
+    <div class="field-group" style="margin-top:16px">
+      <span class="label">Agrupar Resumo por (0 a 5 colunas)</span>
+      <select class="select" multiple style="height:96px">
+        <option selected>Filial</option>
+        <option>Centro_Custo</option>
+        <option>Departamento</option>
+      </select>
+      <p class="help">Default: nenhum (aba "Resumo por Agrupador" não será gerada · análise consolidada disponível em "Resumo Executivo").</p>
+    </div>
+
+    <div class="button-row">
+      <div style="display:flex;gap:8px">
+        <button class="btn">← Voltar</button>
+        <button class="btn">Pular · ir direto para Revisar</button>
+      </div>
+      <button class="btn btn-primary">Próximo · Revisar e executar</button>
+    </div>
+
+    <p class="note">⚠️ Comparar com S-V1 v1: paleta NÃO está aqui (D-212). Vai para o rodapé do RESULTADO espelhando V2.</p>
+  </div>
+</div>
+
+<!-- ============================== Estado E5 ============================== -->
+<h2>Estado <code>E5</code> · Revisar e executar</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=E5</span>
+    <span>app_v1.py · _tela_e5()</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item done">✅ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item done">✅ 2 · Identificar lados</div>
+      <div class="stepper-item done">✅ 3 · Configurar análise</div>
+      <div class="stepper-item done">✅ 4 · Agrupadores executivos</div>
+      <div class="stepper-item active">▶ Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="subheader">Revisar e executar</div>
+    <div class="caption">Confira a configuração antes de processar.</div>
+
+    <div class="summary-grid">
+      <div class="summary-col">
+        <div class="summary-col-title">Arquivo(s)</div>
+        <div class="summary-col-body">
+          conciliacao_outubro2025.xlsx<br><br>
+          Abas: Razao_Outubro2025 + Balancete_Out_2025<br><br>
+          <em>Caso: Origem em aba A · Comparado em aba B</em>
+        </div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-col-title">Lados</div>
+        <div class="summary-col-body">
+          Origem: <strong>Razão</strong><br><br>
+          Comparado: <strong>Balancete</strong>
+        </div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-col-title">Agrupadores match</div>
+        <div class="summary-col-body">
+          2 agrupadores<br><br>
+          Chave: CNPJ do Fornecedor · Filial<br><br>
+          Modos: Exato · Exato
+        </div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-col-title">Campos comparados</div>
+        <div class="summary-col-body">
+          1 campo<br><br>
+          Valor Bruto (Monetário · R$)<br><br>
+          Tolerância: R$ 0,01
+        </div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-col-title">Agrup. executivos</div>
+        <div class="summary-col-body">
+          1 configurado<br><br>
+          Filial<br><br>
+          <em>(aba "Resumo por Agrupador" será gerada)</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button class="btn">← Voltar</button>
+      <button class="btn btn-primary">Processar análise</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado PROCESSANDO ============================== -->
+<h2>Estado <code>PROCESSANDO</code></h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=PROCESSANDO</span>
+    <span>app_v1.py · _executar_pipeline_v1()</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn disabled">Objetivo da Visão</button>
+      <button class="header-btn disabled">Aplicar modelo</button>
+      <button class="header-btn disabled">Salvar como modelo</button>
+      <button class="header-btn disabled">Nova análise</button>
+    </div>
+
+    <div class="spinner-zone">
+      <div class="spinner-icon">⟳</div>
+      <div style="font-size:14px;margin-bottom:8px">Casando registros...</div>
+      <div style="font-size:11px">
+        (rotativo: lendo bases → validando apontamentos → inferindo caso lógico → casando registros → calculando diferenças → construindo Ponte → gerando Resumo)
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================== Estado RESULTADO ============================== -->
+<h2>Estado <code>RESULTADO</code> · 5 blocos executivos + rodapé com paleta (D-175 · D-212)</h2>
+<div class="screen">
+  <div class="screen-tag">
+    <span>state=RESULTADO</span>
+    <span>app_v1.py · _tela_resultado()</span>
+  </div>
+  <div class="screen-body">
+
+    <div class="app-title">V1 · Conciliação de Bases</div>
+    <div class="header-buttons">
+      <button class="header-btn">Objetivo da Visão</button>
+      <button class="header-btn">Aplicar modelo</button>
+      <button class="header-btn">Salvar como modelo</button>
+      <button class="header-btn">Nova análise</button>
+    </div>
+    <details class="ted-expander">
+      <summary class="ted-summary">⚙️ Configurações avançadas</summary>
+    </details>
+
+    <div class="stepper">
+      <div class="stepper-item done">✅ 1 · Escolher arquivo(s)</div>
+      <div class="stepper-item done">✅ 2 · Identificar lados</div>
+      <div class="stepper-item done">✅ 3 · Configurar análise</div>
+      <div class="stepper-item done">✅ 4 · Agrupadores executivos</div>
+      <div class="stepper-item active">▶ Revisar e executar</div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- Bloco 1 · Cabeçalho -->
+    <div class="subheader">📊 Resultado da análise</div>
+    <div class="caption">Conciliação entre <strong>Razão</strong> e <strong>Balancete</strong> · gerada em 26/04/2026 às 22:34</div>
+
+    <!-- Bloco 2 · 4 metrics -->
+    <h3>Números principais</h3>
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="metric-label">Total · Razão</div>
+        <div class="metric-value">R$ 4.286.450,00</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Total · Balancete</div>
+        <div class="metric-value">R$ 4.282.220,40</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Diferença líquida</div>
+        <div class="metric-value">R$ 4.229,60</div>
+        <div class="metric-delta">-0,10%</div>
+      </div>
+      <div class="metric highlight">
+        <div class="metric-label">Taxa de Conciliação</div>
+        <div class="metric-value">87,3%</div>
+        <div class="metric-delta">1.247 de 1.428 conciliados</div>
+      </div>
+    </div>
+
+    <!-- Bloco 3 · Saúde -->
+    <h3>Saúde da comparação</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoria</th>
+            <th class="num">Casos</th>
+            <th class="num">Participação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Conciliados</td><td class="num">1.247</td><td class="num">87,3%</td></tr>
+          <tr><td>Divergentes por valor</td><td class="num">89</td><td class="num">6,2%</td></tr>
+          <tr><td>Saiu do Razão</td><td class="num">47</td><td class="num">3,3%</td></tr>
+          <tr><td>Apareceu no Balancete</td><td class="num">32</td><td class="num">2,2%</td></tr>
+          <tr><td>Divergência por duplicidade</td><td class="num">8</td><td class="num">0,6%</td></tr>
+          <tr><td>Divergência por ambiguidade de match</td><td class="num">5</td><td class="num">0,4%</td></tr>
+          <tr class="total-row"><td>Total processado</td><td class="num">1.428</td><td class="num">100,0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bloco 4 · Status da Ponte -->
+    <h3>Status da Ponte</h3>
+    <div class="banner-status banner-warn">
+      ⚠️ Resíduo de R$ 230,40 em 1 campo · ver Aba 5 · Ponte de Conciliação
+    </div>
+
+    <!-- Bloco 5 · Leitura qualitativa -->
+    <h3>Leitura qualitativa</h3>
+    <p>
+      A conciliação entre <strong>Razão</strong> e <strong>Balancete</strong> apresenta taxa geral de
+      <strong>87,3%</strong>. Dos 1.428 registros processados, a maioria está conciliada · 89 registros
+      divergem por valor com diferença líquida de <strong>R$ 4.229,60</strong> concentrada em <strong>Filial F01</strong>.
+      47 registros aparecem só no Razão e 32 só no Balancete, sugerindo divergência de cobertura entre as bases.
+      A Ponte de Conciliação tem resíduo de R$ 230,40 em 1 campo, indicando que existem diferenças não
+      explicadas pelo confronto registro-a-registro · investigação Aba 5 recomendada.
+    </p>
+
+    <div class="alert-warn">
+      ⚠️ A análise gerou 2 avisos estruturais · veja detalhes no diagnóstico.
+    </div>
+
+    <details class="ted-expander" style="margin-top:12px">
+      <summary class="ted-summary">Ver detalhes do diagnóstico</summary>
+      <div class="ted-body">
+        <p><strong>Caso lógico:</strong> Origem e Comparado em abas distintas · match executado com modo Exato em 2 agrupadores.</p>
+        <p style="margin-top:8px"><strong>Agrupadores aplicados:</strong> CNPJ do Fornecedor · Filial</p>
+        <p><strong>Campo analisado:</strong> Valor Bruto · Valor Monetário · R$</p>
+        <p style="margin-top:8px"><strong>Avisos:</strong></p>
+        <ul style="font-size:11px;color:var(--ink-soft);margin-left:20px">
+          <li>W-V1-TOL · 12 registros conciliados tinham diferença não-zero dentro da tolerância (R$ 0,84 absorvidos)</li>
+          <li>W-V1-DUP · 4 chaves duplicadas afetando 8 registros</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Rodapé · Voltar · Paleta · Baixar (D-175 · D-212) -->
+    <div class="result-footer">
+      <button class="btn">← Voltar</button>
+      <div>
+        <span class="label">Paleta do Excel</span>
+        <select class="select">
+          <option>Azul executivo</option>
+          <option>Cinza executivo</option>
+          <option>Verde executivo</option>
+          <option>Vinho executivo</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn btn-primary" style="width:100%">📥 Baixar Excel</button>
+      </div>
+    </div>
+
+    <div style="margin-top:8px">
+      <button class="btn">🔄 Nova análise</button>
+    </div>
+
+    <p class="note" style="margin-top:16px">
+      <strong>D-162 · separação download/aprovação:</strong> botão "Baixar Excel" gera o arquivo · não declara aprovação. Aprovação (gate B.4 camada 1 · VVC) é evento separado em VV-V1.
+      <br>
+      <strong>D-175 §5.4 · paleta no rodapé:</strong> troca livre · Excel é regenerado quando paleta muda · sem reprocessar a análise.
+    </p>
+
+  </div>
+</div>
+
+<!-- ============================== Notas finais ============================== -->
+<h2>Notas finais sobre este wireframe</h2>
+<div class="screen">
+  <div class="screen-body">
+    <p>
+      <strong>Diferenças importantes vs S-V1 v1 (corrigidas):</strong>
+    </p>
+    <ul style="margin-left:20px;font-size:13px;color:var(--ink-soft);line-height:1.8">
+      <li><strong>Sem sidebar lateral</strong> · layout top-down em coluna única (espelha V2)</li>
+      <li><strong>Header com 4 botões</strong> · Objetivo · Aplicar modelo · Salvar como modelo · Nova análise (espelha V2)</li>
+      <li><strong>Stepper horizontal</strong> · 5 marcadores (4 etapas + Revisão) · ✅ ▶ · (espelha V2)</li>
+      <li><strong>TED em expander "⚙️ Configurações avançadas" no topo</strong> · D-178 · NÃO em sidebar (D-212 corrige P-V1 §4.5)</li>
+      <li><strong>Cada etapa é tela própria</strong> com subheader + caption + conteúdo + divider + botões Voltar/Avançar (espelha V2)</li>
+      <li><strong>E1 com radio "Quantos arquivos?"</strong> · D-213 · decisão física apenas · sem radio "estrutura A/B"</li>
+      <li><strong>E1_OK com multiselect ou 2 dropdowns</strong> · escolha de 1-2 abas · D-213</li>
+      <li><strong>E2 reduzida</strong> · só rótulos amigáveis (sem POR_LINHAS/POR_COLUNAS · V1 não tem POR_LINHAS no escopo MVP)</li>
+      <li><strong>E3 com 2 sub-blocos</strong> · agrupadores match + campos comparados · caso lógico inferido em info-box após Sub-etapa 3.2</li>
+      <li><strong>E4 só "Agrupadores executivos"</strong> · OPCIONAL · sem paleta (D-212)</li>
+      <li><strong>E5 com 5 colunas-resumo</strong> (espelha V2 · adaptado para V1)</li>
+      <li><strong>RESULTADO com 5 blocos</strong> · Cabeçalho · 4 metrics · Saúde · Status Ponte · Leitura qualitativa</li>
+      <li><strong>Paleta no rodapé do RESULTADO</strong> · selectbox + Baixar Excel · D-175 §5.4 · D-212 corrige P-V1 §4.5</li>
+    </ul>
+    <p style="margin-top:16px">
+      <strong>Ramificação por caso lógico (D-213):</strong> wireframe mostra 2 variantes da E3:
+      ABAS_DISTINTAS (modo de match ativo · alert-info azul "match será executado")
+      e MESMA_ABA_EM_COLUNAS (modo de match disabled · alert-info "linha-a-linha · 2 classificações"). 
+      Sistema infere automaticamente a partir dos apontamentos · nenhuma decisão explícita da Usuária.
+    </p>
+    <p style="margin-top:8px">
+      <strong>Bloqueios novos refletidos no fluxo:</strong>
+      B-V1-MESMA-COLUNA (bloqueia E3→E4 quando coluna_origem == coluna_comparado na mesma aba) e
+      B-V1-MISTURA-ABAS (bloqueia E3→E4 quando apontamentos misturam abas inconsistentemente).
+      Não exibidos como tela neste wireframe · aparecem como alert-err inline na E3.
+    </p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python src/teste_motores.py)",
+      "Bash(find . -name \"*.pyc\" -delete)",
+      "Bash(find . -name \"__pycache__\" -type d -exec rm -rf {} +)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('app_v4.py', encoding='utf-8'\\).read\\(\\)\\); print\\('AST OK'\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(timeout 15 streamlit run app_v4.py --server.headless true --server.port 8599 --browser.gatherUsageStats false)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:8599/)",
+      "Bash(python -m streamlit --version)",
+      "Bash(python -m streamlit run app_v4.py --server.headless true --server.port 8599 --browser.gatherUsageStats false)",
+      "Bash(echo \"PID $!\")",
+      "Bash(pkill -f \"streamlit run app_v4.py\")",
+      "Bash(python bases/gerar_base_v2.py)",
+      "Bash(python)",
+      "Bash(timeout 10 streamlit run app_v2.py --server.headless=true --server.port=8599)",
+      "Bash(python -c \"print\\(sum\\(1 for _ in open\\('src/app_v2.py', encoding='utf-8'\\)\\)\\)\")",
+      "Bash(python -m pytest src/testes/ -v --tb=short)",
+      "Bash(python -m pytest src/testes/test_t_diag.py src/testes/test_t_agrupa.py src/testes/test_t_sema.py src/testes/test_t_dual.py src/testes/test_t_eixo.py src/testes/test_t_pivot.py src/testes/test_t_rank.py src/testes/test_t_acum.py src/testes/test_t_abc.py src/testes/test_t_modelo.py src/testes/test_t_fuzzy.py src/testes/test_t_concat.py -v --tb=no -q)",
+      "Bash(python -c \"import openpyxl; print\\(openpyxl.__version__\\)\")",
+      "Bash(python -c \"import pydantic; print\\(pydantic.__version__\\)\")",
+      "Bash(python *)",
+      "Bash(pip install *)",
+      "Bash(python3 *)",
+      "Bash(PYTHONPATH=src python -m apresentacao.demo_amostras)",
+      "Bash(pytest -q)",
+      "Bash(wc *)",
+      "Bash(streamlit run *)",
+      "Bash(curl -s http://localhost:8501/_stcore/health)",
+      "Bash(curl -sf http://localhost:8501/_stcore/health)",
+      "Bash(grep *)"
+    ]
+  }
+}

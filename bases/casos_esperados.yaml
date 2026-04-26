@@ -1,0 +1,396 @@
+# casos_esperados.yaml
+# Artefato canônico de validação da base de fundação (D-141)
+# Consumido em 3 pontos:
+#   (1) F-BASE · auto-validação da base gerada
+#   (2) F-MOT/F-TRANS · testes de regressão automatizados
+#   (3) Fase 2 · checklist de Validação Visual derivado por visão
+# Referência canônica: spec_fundacao.md §J · D-141
+
+metadata:
+  versao_base: "1.0"
+  seed: 42                               # D-140 · invariante
+  total_abas: 14                         # D-140 · invariante
+  total_linhas_agregado: 1853   # gerado F-BASE 2026-04-21 · spec ~2063 (referência aproximada)
+  data_geracao: "2026-04-21"
+
+visoes:
+
+  V2:
+    descricao: "Comparação entre estados · Família A · Modo 4 · POR_LINHAS"
+    aba_principal: "vendas_padrao"
+    assertions:
+      - id: "V2-A01"
+        tipo: "contagem_categoria"
+        descricao: "Entre os 2 meses (2025-01 e 2025-02) há elementos ausentes em um lado (2-4 ocorrências)"
+        coluna: "Produto"
+        aba: "vendas_padrao"
+        esperado: {min: 2, max: 4}
+        warning_associado: "W-V2-AUSENTE-EM-UM-LADO"
+      - id: "V2-A02"
+        tipo: "warning_presente"
+        descricao: "W-NULO-MEDIDA emitido com 3-4 ocorrências em Vendas"
+        esperado: {warning_code: "W-NULO-MEDIDA", min: 3, max: 4}
+      - id: "V2-A03"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Matriz de Confronto"
+        esperado: {resumo_blocos: 6, coracao_visual: "Matriz de Confronto"}
+      - id: "V2-A04"
+        tipo: "contagem_exata"
+        descricao: "Discriminador Mes tem exatamente 2 estados distintos (2025-01 e 2025-02)"
+        coluna: "Mes"
+        aba: "vendas_padrao"
+        esperado: {valor: 2}
+    aba_secundaria:
+      nome: "vendas_por_colunas"
+      nota: "Exercita T-PIVOT semântica 1 · POR_COLUNAS → POR_LINHAS antes do cálculo · 14 colunas"
+
+  V1:
+    descricao: "Confronto entre bases · Família A · D-213 · S-V1 v2.0 · 2 ramos lógicos (ABAS_DISTINTAS · MESMA_ABA_EM_COLUNAS)"
+    abas_consumidas: ["dual_origem_crm", "dual_comparado_erp"]
+    aba_unica_caso_3: null  # MESMA_ABA_EM_COLUNAS · base atual sem aba dedicada · pré-req A-V1
+    config_canonica:
+      caso_logico_inferido: "ABAS_DISTINTAS"
+      agrupadores_match:
+        - {nome_origem: "Conta", nome_comparado: "Conta", modo: "EXATO"}
+        - {nome_origem: "Centro_Custo", nome_comparado: "Centro_Custo", modo: "EXATO"}
+      campos_comparados:
+        - {nome: "Valor", tipo: "VALOR_MONETARIO", unidade: "MONETARIO_BRL", tolerancia: 0.01}
+      agrupadores_executivos: ["Centro_Custo"]
+    assertions:
+      - id: "V1-A01"
+        tipo: "contagem_categoria"
+        descricao: "ABAS_DISTINTAS · DIVERGENTE_VALOR · faixa empírica (config canônica) · auditoria 2026-04-26"
+        classificacao: "DIVERGENTE_VALOR"
+        esperado: {min: 8, max: 12}
+      - id: "V1-A02"
+        tipo: "contagem_categoria"
+        descricao: "ABAS_DISTINTAS · SO_ORIGEM · faixa empírica"
+        classificacao: "SO_ORIGEM"
+        esperado: {min: 34, max: 38}
+      - id: "V1-A03"
+        tipo: "contagem_categoria"
+        descricao: "ABAS_DISTINTAS · SO_COMPARADO · faixa empírica"
+        classificacao: "SO_COMPARADO"
+        esperado: {min: 42, max: 46}
+      - id: "V1-A04"
+        tipo: "contagem_categoria"
+        descricao: "ABAS_DISTINTAS · DIVERGENCIA_DUPLICIDADE · base com chaves duplicadas em Conta+Centro_Custo"
+        classificacao: "DIVERGENCIA_DUPLICIDADE"
+        esperado: {min: 42, max: 46}
+      - id: "V1-A05"
+        tipo: "contagem_categoria"
+        descricao: "ABAS_DISTINTAS · CONCILIADO · esperado 0-2 com modo EXATO (pareamento perfeito raro nesta base)"
+        classificacao: "CONCILIADO"
+        esperado: {min: 0, max: 2}
+      - id: "V1-A06"
+        tipo: "contagem_exata"
+        descricao: "ABAS_DISTINTAS · DIVERGENCIA_AMBIGUIDADE · 0 em modo EXATO (set semantics · S-V1 §2.2)"
+        classificacao: "DIVERGENCIA_AMBIGUIDADE"
+        esperado: {valor: 0}
+      - id: "V1-A07"
+        tipo: "warning_presente"
+        descricao: "W-V1-DUP · base tem chaves duplicadas em ambos lados (~44 chaves)"
+        esperado: {warning_code: "W-V1-DUP", min: 42, max: 46}
+      - id: "V1-A08"
+        tipo: "warning_presente"
+        descricao: "W-V1-TOL · 0 ocorrências (base não exercita absorção por tolerância na config canônica)"
+        esperado: {warning_code: "W-V1-TOL", exato: 0}
+      - id: "V1-A09"
+        tipo: "warning_presente"
+        descricao: "W-V1-AMB · 0 ocorrências em modo EXATO"
+        esperado: {warning_code: "W-V1-AMB", exato: 0}
+      - id: "V1-A10"
+        tipo: "estrutura_saida"
+        descricao: "Coração Visual · Mapa de Conciliação · 6 blocos do RE da Fundação"
+        esperado: {resumo_blocos: 6, coracao_visual: "Mapa de Conciliação"}
+      - id: "V1-A11"
+        tipo: "estrutura_saida"
+        descricao: "Status da Ponte com configuração canônica · esperado FECHA (resíduo absorvido pelos ajustes SO_*)"
+        esperado: {status_ponte_geral: "FECHA"}
+      - id: "V1-A12"
+        tipo: "estrutura_saida"
+        descricao: "Σ origem − Σ comparado · faixa empírica · valor negativo (Comparado > Origem) · em MONETARIO_BRL"
+        esperado: {diferenca_liquida_min: -120000.0, diferenca_liquida_max: -90000.0, unidade: "MONETARIO_BRL"}
+
+  V11:
+    descricao: "Aderência por pareamento fuzzy · Família A · T-FUZZY · T-CONCAT"
+    aba_principal: "cadastral_fuzzy"
+    assertions:
+      - id: "V11-A01"
+        tipo: "contagem_categoria"
+        descricao: "Pareamentos em zona cinza (0.65 ≤ score < 0.85) · 5-7 linhas"
+        esperado: {min: 5, max: 7}
+        warning_associado: "W-V11-SCORE-ZONA-CINZA"
+      - id: "V11-A02"
+        tipo: "inferencia_subtipo_id"
+        descricao: "Coluna CNPJ em cadastral_fuzzy detectada como subtipo_id_detectado=True"
+        coluna: "CNPJ"
+        aba: "cadastral_fuzzy"
+        esperado: {tipo_estrutural: "CATEGORICO_ELEGIVEL", subtipo_id_detectado: true}
+      - id: "V11-A03"
+        tipo: "contagem_exata"
+        descricao: "Registros ruidosos sem par acima do threshold (score < 0.65) · 3-4 linhas"
+        esperado: {min: 3, max: 4}
+        warning_associado: "W-V11-SEM-PAR-ACIMA-THRESHOLD"
+      - id: "V11-A04"
+        tipo: "warning_presente"
+        descricao: "W-V11-SCORE-ZONA-CINZA emitido com 5-7 ocorrências"
+        esperado: {warning_code: "W-V11-SCORE-ZONA-CINZA", min: 5, max: 7}
+      - id: "V11-A05"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Mapa de Aderência"
+        esperado: {resumo_blocos: 6, coracao_visual: "Mapa de Aderência"}
+
+  V4:
+    descricao: "Composição · Família C · Modos 1 e 3 · T-ABC · T-ACUM · T-RANK"
+    aba_principal: "vendas_padrao"
+    assertions:
+      - id: "V4-A01"
+        tipo: "contagem_categoria"
+        descricao: "Distribuição Pareto · 5 produtos concentram ~78% das vendas (Classe A)"
+        esperado: {min: 4, max: 6}
+        warning_associado: "W-ABC-CONCENTRACAO-ALTA"
+      - id: "V4-A02"
+        tipo: "contagem_exata"
+        descricao: "T-ABC classifica em 3 categorias (A/B/C) com thresholds 80/95"
+        esperado: {valor: 3}
+      - id: "V4-A03"
+        tipo: "warning_presente"
+        descricao: "W-AGRUPA-JA-AGREGADO emitido ao usar vendas_pre_agregadas"
+        aba_alternativa: "vendas_pre_agregadas"
+        esperado: {warning_code: "W-AGRUPA-JA-AGREGADO", exato: 1}
+      - id: "V4-A04"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Pareto ABC"
+        esperado: {resumo_blocos: 6, coracao_visual: "Pareto ABC"}
+
+  V10:
+    descricao: "Curva Pareto · Família C · view especializada de V4 · 45 Produtos"
+    aba_principal: "vendas_volume_alto"
+    assertions:
+      - id: "V10-A01"
+        tipo: "contagem_categoria"
+        descricao: "Vitais Classe A · ~12 produtos concentrando ~80% das vendas"
+        esperado: {min: 10, max: 15}
+      - id: "V10-A02"
+        tipo: "contagem_exata"
+        descricao: "Total de produtos distintos no agrupador: exatamente 45"
+        coluna: "Produto"
+        aba: "vendas_volume_alto"
+        esperado: {valor: 45}
+      - id: "V10-A03"
+        tipo: "warning_presente"
+        descricao: "W-NULO-MEDIDA em Vendas (5-8% de 400 linhas = 20-32 ocorrências)"
+        esperado: {warning_code: "W-NULO-MEDIDA", min: 20, max: 32}
+      - id: "V10-A04"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Curva Pareto"
+        esperado: {resumo_blocos: 6, coracao_visual: "Curva Pareto"}
+
+  V3:
+    descricao: "Análise sequencial · Família B · T-EIXO · reconhecedor pt-BR/pt-EN"
+    aba_principal: "eixo_sequencial_completo"
+    assertions:
+      - id: "V3-A01"
+        tipo: "contagem_exata"
+        descricao: "Eixo completo sem lacunas · 12 meses distintos de 2025-01 a 2025-12"
+        coluna: "Mes"
+        aba: "eixo_sequencial_completo"
+        esperado: {valor: 12}
+      - id: "V3-A02"
+        tipo: "contagem_exata"
+        descricao: "Eixo com lacunas · 10 meses distintos (faltam 2025-03 e 2025-07)"
+        coluna: "Mes"
+        aba: "eixo_sequencial_lacunas"
+        esperado: {valor: 10}
+      - id: "V3-A03"
+        tipo: "warning_presente"
+        descricao: "W-V3-EIXO-LACUNA emitido com 2 ocorrências (2025-03 e 2025-07 ausentes)"
+        aba: "eixo_sequencial_lacunas"
+        esperado: {warning_code: "W-V3-EIXO-LACUNA", exato: 2}
+      - id: "V3-A04"
+        tipo: "contagem_exata"
+        descricao: "Meses em formato ISO YYYY-MM reconhecidos corretamente como TEMPORAL"
+        esperado: {min: 10, max: 12}
+      - id: "V3-A05"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Linha do Tempo Comparada"
+        esperado: {resumo_blocos: 6, coracao_visual: "Linha do Tempo Comparada"}
+
+  V8:
+    descricao: "Matriz de Presença · Família B · herança integral de T-EIXO"
+    aba_principal: "eixo_sequencial_completo"
+    assertions:
+      - id: "V8-A01"
+        tipo: "contagem_exata"
+        descricao: "Matriz Produto × Mes · células teóricas = produtos × 12 meses"
+        esperado: {min: 100, max: 200}
+      - id: "V8-A02"
+        tipo: "contagem_categoria"
+        descricao: "Densidade de presença ~70% (ausência como conteúdo · não warning · D-076)"
+        esperado: {min_pct: 60, max_pct: 85}
+      - id: "V8-A03"
+        tipo: "warning_presente"
+        descricao: "W-CARD-ALTA disparado para matrizes com muitas células (CAP-PAGINACAO-MATRIZ)"
+        aba: "vendas_volume_alto"
+        esperado: {warning_code: "W-CARD-ALTA", exato: 1}
+      - id: "V8-A04"
+        tipo: "contagem_categoria"
+        descricao: "Produto com entrada tardia (aparece só a partir do 4º mês) · ≥1"
+        esperado: {min: 1, max: 5}
+      - id: "V8-A05"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Matriz de Presença"
+        esperado: {resumo_blocos: 6, coracao_visual: "Matriz de Presença"}
+
+  V7:
+    descricao: "Grupos internos · Família D · T-SEMA menor-é-melhor global · Prazo_Dias"
+    aba_principal: "operacao_perfil_grupo"
+    assertions:
+      - id: "V7-A01"
+        tipo: "contagem_exata"
+        descricao: "4 regiões como agrupadores (Norte, Sul, Leste, Oeste)"
+        coluna: "Regiao"
+        aba: "operacao_perfil_grupo"
+        esperado: {valor: 4}
+      - id: "V7-A02"
+        tipo: "contagem_categoria"
+        descricao: "Filiais com Desvio Significativo acima da média regional · 3-4"
+        esperado: {min: 3, max: 4}
+      - id: "V7-A03"
+        tipo: "warning_presente"
+        descricao: "W-V7-GRUPO-TAMANHO-INSUFICIENTE · região Oeste com apenas 2 filiais"
+        esperado: {warning_code: "W-V7-GRUPO-TAMANHO-INSUFICIENTE", exato: 1}
+      - id: "V7-A04"
+        tipo: "warning_presente"
+        descricao: "W-V7-GRUPO-UNIFORME · 1 região sem dispersão interna significativa"
+        esperado: {warning_code: "W-V7-GRUPO-UNIFORME", min: 1, max: 2}
+      - id: "V7-A05"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Desvio por Grupo"
+        esperado: {resumo_blocos: 6, coracao_visual: "Desvio por Grupo"}
+
+  V9:
+    descricao: "Perfil multi-métrica segmentado · Família D · par de V7 · T-RANK cross_elementos"
+    aba_principal: "operacao_perfil_grupo"
+    assertions:
+      - id: "V9-A01"
+        tipo: "contagem_exata"
+        descricao: "Segmentador Transportadora tem 4-6 valores distintos"
+        coluna: "Transportadora"
+        aba: "operacao_perfil_grupo"
+        esperado: {min: 4, max: 6}
+      - id: "V9-A02"
+        tipo: "contagem_exata"
+        descricao: "Métricas disponíveis: Prazo_Dias e Peso_Kg (2 métricas)"
+        esperado: {valor: 2}
+      - id: "V9-A03"
+        tipo: "warning_presente"
+        descricao: "W-NULO-MEDIDA-METRICA-SECUNDARIA · Peso_Kg nulo em 1-2 filiais (~4%)"
+        esperado: {warning_code: "W-NULO-MEDIDA-METRICA-SECUNDARIA", min: 1, max: 8}
+      - id: "V9-A04"
+        tipo: "warning_presente"
+        descricao: "W-V9-SEGMENTO-TAMANHO-INSUFICIENTE · segmento com < 3 filiais"
+        esperado: {warning_code: "W-V9-SEGMENTO-TAMANHO-INSUFICIENTE", min: 1, max: 3}
+      - id: "V9-A05"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Mapa de Perfil"
+        esperado: {resumo_blocos: 6, coracao_visual: "Mapa de Perfil"}
+
+  V5:
+    descricao: "Dispersão e outliers · Família E · univariado · Prazo_Dias"
+    aba_principal: "operacao_dispersao"
+    assertions:
+      - id: "V5-A01"
+        tipo: "contagem_exata"
+        descricao: "Outliers à direita detectados por IQR×1.5 · ~15 linhas (45-120 dias)"
+        esperado: {min: 10, max: 20}
+        warning_associado: "W-V5-OUTLIERS-DETECTADOS"
+      - id: "V5-A02"
+        tipo: "contagem_exata"
+        descricao: "Valor extremo isolado · 1 linha com Prazo_Dias=350"
+        esperado: {valor: 1}
+      - id: "V5-A03"
+        tipo: "warning_presente"
+        descricao: "W-V5-OUTLIERS-DETECTADOS emitido"
+        esperado: {warning_code: "W-V5-OUTLIERS-DETECTADOS", min: 1, max: 1}
+      - id: "V5-A04"
+        tipo: "warning_presente"
+        descricao: "W-V5-DISTRIBUICAO-ASSIMETRICA emitido (cauda direita pronunciada)"
+        esperado: {warning_code: "W-V5-DISTRIBUICAO-ASSIMETRICA", exato: 1}
+      - id: "V5-A05"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Histograma de Dispersão"
+        esperado: {resumo_blocos: 6, coracao_visual: "Histograma de Dispersão"}
+
+  V6:
+    descricao: "Cruzamento de duas categóricas · Família E · bivariado · Filial × Transportadora"
+    aba_principal: "operacao_cruzamento"
+    assertions:
+      - id: "V6-A01"
+        tipo: "contagem_exata"
+        descricao: "Filiais distintas no eixo: exatamente 8"
+        coluna: "Filial"
+        aba: "operacao_cruzamento"
+        esperado: {valor: 8}
+      - id: "V6-A02"
+        tipo: "contagem_exata"
+        descricao: "Transportadoras distintas no eixo: exatamente 6"
+        coluna: "Transportadora"
+        aba: "operacao_cruzamento"
+        esperado: {valor: 6}
+      - id: "V6-A03"
+        tipo: "contagem_categoria"
+        descricao: "Células ausentes na matriz 8×6=48 células · ~14 ausentes (~29%)"
+        esperado: {min: 10, max: 18}
+        warning_associado: "W-V6-CELULAS-AUSENTES-ALTO-TOTAL"
+      - id: "V6-A04"
+        tipo: "warning_presente"
+        descricao: "W-V6-CELULAS-AUSENTES-ALTO-TOTAL emitido (3-4 combinações ausentes)"
+        esperado: {warning_code: "W-V6-CELULAS-AUSENTES-ALTO-TOTAL", min: 3, max: 4}
+      - id: "V6-A05"
+        tipo: "estrutura_saida"
+        descricao: "Resumo Executivo tem 6 blocos · Coração Visual é Densidade de Cruzamento"
+        esperado: {resumo_blocos: 6, coracao_visual: "Densidade de Cruzamento"}
+
+transversais:
+
+  motor_upload:
+    - id: "MU-A01"
+      tipo: "inferencia_boolean"
+      descricao: "Coluna Ativo em boolean_disfarcado detectada como CATEGORICO · não NUMERICO · D-008"
+      aba: "boolean_disfarcado"
+      esperado: {tipo_estrutural: "CATEGORICO_ELEGIVEL", subtipo_id_detectado: false}
+    - id: "MU-A02"
+      tipo: "inferencia_subtipo_id"
+      descricao: "Coluna CNPJ em cadastral_fuzzy detectada como ID (alta cardinalidade + padrão)"
+      aba: "cadastral_fuzzy"
+      esperado: {tipo_estrutural: "CATEGORICO_ELEGIVEL", subtipo_id_detectado: true}
+    - id: "MU-A03"
+      tipo: "inferencia_boolean"
+      descricao: "Coluna Status_Entrega em operacao_dispersao detectada como CATEGORICO · não booleano"
+      aba: "operacao_dispersao"
+      esperado: {tipo_estrutural: "CATEGORICO_ELEGIVEL", subtipo_id_detectado: false}
+    - id: "MU-A04"
+      tipo: "inferencia_subtipo_id"
+      descricao: "Coluna Fornecedor_ID em cadastral_fuzzy detectada como subtipo_id_detectado=True"
+      aba: "cadastral_fuzzy"
+      esperado: {tipo_estrutural: "CATEGORICO_ELEGIVEL", subtipo_id_detectado: true}
+    - id: "MU-A05"
+      tipo: "inferencia_boolean"
+      descricao: "Coluna Vendas em vendas_padrao detectada como NUMERICO_CONTINUO"
+      aba: "vendas_padrao"
+      esperado: {tipo_estrutural: "NUMERICO_CONTINUO", subtipo_id_detectado: false}
+
+  bloqueio_operacional:
+    - id: "BO-A01"
+      tipo: "bloqueio_emitido"
+      descricao: "Aba cardinalidade_excessiva dispara BloqueioOperacional antes do cálculo (85 categorias > threshold)"
+      aba: "cardinalidade_excessiva"
+      esperado: {bloqueio_codigo: "B-CARD-EXCESSIVA", contrato: "BloqueioOperacional"}
+
+  determinismo:
+    - id: "DET-A01"
+      tipo: "determinismo_seed"
+      descricao: "Execução duas vezes com SEED=42 produz DataFrames com hash SHA-256 idêntico"
+      esperado: {hash_estavel: true}
