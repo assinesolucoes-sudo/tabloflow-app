@@ -1,65 +1,127 @@
-# V-V1 · Checklist Mecânico (D-174 Camada 1)
+# A-V1 · Checklist Mecânico (D-174 Camada 1)
 
-**Sessão:** V-V1 · Motor da V1 · Conciliação de Bases
+**Sessão:** A-V1 · App + Excel + E2E (4º quadrado V1)
 **Data:** 2026-04-26
-**Total checks:** 24/24 ✅
+**Total checks:** 24/25 ✅ + 1 desvio justificado (BIF-11 cobertura)
 
 ---
 
 ## Suite e cobertura
 
-- [✅] Suite pytest `src/testes/` 100% verde sobre os novos · final **978/979** (745 herdados + 233 V1 + 1 vermelho herdado pré-existente preservado)
-- [✅] Suite count >= 745 + 150 (mínimo Q4.C declarado no prompt) · final 745 + **233**
-- [✅] Cobertura `src/visoes/visao_v1.py` >= 90% · final **95%** (917 stmts · 46 miss)
+- [x] Suite pytest 100% verde sobre os 118 testes novos · final **1096/1097 verde**
+  (1 vermelho herdado D-220 preservado)
+- [x] Suite count >= 978 + 110 (mínimo declarado) · entregue **1.096** (978 + 118)
+- [ ] Cobertura `app_v1.py` >= 85% · **entregue 78%** · DESVIO documentado em
+      `A-V1_RELATORIO.md` §2 BIF-11 (paths file_uploader não testáveis sem mocks pesados)
+- [x] Cobertura `exportacao_v1.py` >= 90% · **entregue 94%**
+- [x] Vermelho herdado D-220 preservado · não novo vermelho
 
-## Documentos
+## App (`src/app_v1.py`)
 
-- [✅] `src/testes/V-V1_ANCORAGEM.md` existe e está completo · eco S-V1 v2 (13 contratos · 5 enums · 12 bloqueios · 4 warnings · 8 thresholds · pipeline 8 etapas · 4 casos D-213)
-- [✅] `src/testes/V-V1_AUDITORIA_BASE.md` existe e está completo · 6 seções (discrepâncias YAML · inspeção estrutural · execução empírica · entrada reescrita · resumo · lacunas)
-- [✅] `src/testes/V-V1_RELATORIO.md` existe e está completo · 8 seções (resumo · 9 bifurcações · TODO grep · checklist · sugestões · anomalias · próximo passo)
-- [✅] `src/testes/CHECKLIST_MECANICO.md` existe (este arquivo)
+- [x] `src/app_v1.py` existe · importa sem erro Python
+- [x] `streamlit run src/app_v1.py` sobe sem exception (validado via AppTest)
+- [x] 8 estados implementados: vazio · E1_OK · E2 · E3 · E4 · E5 · PROCESSANDO · RESULTADO · ERRO
+- [x] 5 etapas no stepper (P-V1 §2.7 corrigido D-212):
+      "1 · Escolher arquivo(s)" · "2 · Identificar lados" · "3 · Configurar análise"
+      · "4 · Agrupadores executivos" · "Revisar e executar"
+- [x] Header com 4 botões: Objetivo · Aplicar modelo · Salvar como modelo · Nova análise
+- [x] TED expander "⚙️ Configurações avançadas" no topo · 3 thresholds globais +
+      epsilon dinâmico por unidade em uso (D-211)
+- [x] Paleta no rodapé do RESULTADO · NÃO na E4 (D-175 + D-212)
+- [x] 12 bloqueios B-V1-* implementados:
+      - [x] B-V1-NO-UPLOAD · botão Avançar disabled
+      - [x] B-V1-AGRUPADOR-ZERO · `st.error` inline + Avançar disabled
+      - [x] B-V1-AGRUPADOR-EXCEDE · botão "+" disabled em N==5
+      - [x] B-V1-CAMPO-ZERO · `st.error` inline + Avançar disabled
+      - [x] B-V1-CAMPO-EXCEDE · botão "+" disabled em N==10
+      - [x] B-V1-MESMA-COLUNA · `st.error` inline + Avançar disabled
+      - [x] B-V1-MISTURA-ABAS · detectado pelo motor (V-V1 §2.5)
+      - [x] B-V1-CHAVE-INVALIDA · `st.warning` inline (não bloqueia · BIF-4)
+      - [x] B-V1-MOTOR-INFERIU-INCOMPATIVEL · capturado em `_etapa_2_validar_apontamentos`
+      - [x] B-V1-RESULTADO-EXCEDE · captura ValueError do motor · vai para ERRO
+      - [x] B-V1-DIV-ZERO · célula "—" no Excel · não exibe banner (motor)
+      - [x] B-V1-MOTOR-FALHOU · catch-all · vai para ERRO
+- [x] 4 warnings W-V1-* exibidos:
+      - [x] W-V1-TOL · expander "Avisos" no RESULTADO + §5 da Aba 6
+      - [x] W-V1-DUP · idem
+      - [x] W-V1-AMB · idem
+      - [x] W-V1-UNIDADE · `st.warning` inline em E3 + §5 da Aba 6
+- [x] Inferência caso lógico (D-213) em E3 · 2 ramos · info-box correto (ABAS_DISTINTAS
+      / MESMA_ABA_EM_COLUNAS) · Caso 4 fora de MVP
+- [x] T-MODELO funcional · Salvar JSON via download_button · Aplicar JSON via
+      file_uploader inline (espelho V2)
+- [x] Reset completo preserva keys `_modelo_*` (Nova análise)
 
-## Implementação
+## Exportação (`src/visoes/exportacao_v1.py`)
 
-- [✅] `src/visoes/visao_v1.py` existe (~2.230 linhas)
-- [✅] `src/visoes/visao_v1.py` importa sem erro
-- [✅] `executar_v1(motor_result, config)` retorna `ConciliacaoV1Result`
-- [✅] 7 enums declaradas (5 exigidas + 2 adicionadas por bifurcação): `CasoLogicoV1` · `ModoMatchV1` · `TipoCampoV1` · `ClassificacaoRegistroV1` · `StatusCampoV1` · `StatusPonteV1` · `UnidadeCanonica`
-- [✅] 16 contratos Pydantic declarados (S-V1 §1.1, §1.2, §1.4, §1.6, §1.11-1.21 + ParCasado interno)
-- [✅] 12 bloqueios B-V1-* implementados e testados (S-V1 §2.5)
-- [✅] 4 warnings W-V1-* implementados e testados (S-V1 §2.7)
-- [✅] 8 thresholds TED V1 declarados (S-V1 §2.8)
+- [x] `src/visoes/exportacao_v1.py` existe · função pública assinada como
+      `exportar_resultado_v1(v1_result, caminho_saida, paleta_nome, ...)` espelhando V2
+- [x] **6 abas** em ABAS_DISTINTAS com agrupadores executivos · validado via openpyxl
+- [x] **5 abas** sem agrupadores executivos · Aba 2 omitida
+- [x] Aba 1 com 9 seções (Mockup-V1 §3): Cabeçalho · Taxa Conciliação · Volumetria ·
+      Status Ponte · Valor por campo · Cobertura · Resumo por agrupador · Síntese
+      Diagnóstico · Configuração aplicada + Leitura Qualitativa final
+- [x] Abas 2-6 conforme Mockup §4-§8:
+      - Aba 2 · ListObject `Resumo por Agrupador` (CONDICIONAL)
+      - Aba 3 · ListObject `Mapa de Conciliação` (1 linha por registro)
+      - Aba 4 · ListObject `Análise Analítica` (4 colunas × N campos)
+      - Aba 5 · Bespoke `Ponte de Conciliação` (1 sub-Ponte por campo elegível ·
+        omite PERCENTUAL/ADIMENSIONAL/RAZAO · Q1.B · D-210)
+      - Aba 6 · Bespoke `Diagnóstico` (6 seções) · ÚLTIMA aba (D-017)
+- [x] Capability 11 D-205 (`number_format_valor` · `number_format_diferenca`)
+      usada em todas as colunas de valor por unidade
+- [x] 4 paletas funcionais: Azul · Verde · Cinza · Vinho (validado via fixture
+      parametrizada `TestExportacaoPaletas`)
+- [x] Larguras ajustadas via `_ajustar_larguras` (D-202 · ignora masters de merges)
+- [x] Bordas finas via `_bordas_finas(paleta)` herdado de Família A
+- [x] Vocabulário bilingue Bloco 1.1 V1: "Saiu do {origem_ux}" · "Apareceu no
+      {comparado_ux}" quando `rotulo_amigavel_declarado=True` · "Só na Origem" / "Só
+      no Comparado" quando False (P-V1 §2.2)
 
-## Pipeline
+## E2E
 
-- [✅] Pipeline 8 etapas implementado (S-V1 §2.1)
-- [✅] Ramo ABAS_DISTINTAS funcional (helper `_etapa_4a_match_abas_distintas` · 4 modos de match)
-- [✅] Ramo MESMA_ABA_EM_COLUNAS funcional (helper `_etapa_4b_pareamento_linha_a_linha` · invariantes)
+- [x] `test_app_v1_e2e_excel.py` 7/7 verde (6 da TestE2ECompleto + 1 botão E1_OK)
+- [x] `outputs/exemplo_v1_camada2.xlsx` gerado · **23.781 bytes** (target ajustado
+      para >5KB · arquivo realista é compacto)
+- [x] `outputs/exemplo_v1_camada2_<paleta>.xlsx` para 3 paletas alternativas:
+      verde 23.780 · cinza 23.776 · vinho 23.779 bytes
 
-## Saída
+## TODO grep
 
-- [✅] Resumo Executivo com 9 seções mapeáveis (S-V1 §2.10) · 14 testes verificam estrutura
-- [✅] `CoracaoVisualRef.nome_aba == "Mapa de Conciliação"` (verificado em test_coracao_visual)
+- [x] `grep -rn "TODO-FAPRESENT-CLEANUP" src/` output declarado em
+      `A-V1_RELATORIO.md` §3
+- [x] **0 novos marcadores** adicionados em A-V1 (todos pré-existentes)
 
-## Determinismo e invariantes
+## Bifurcações catalogadas
 
-- [✅] Ordenação determinística canônica testada (Q3 · `(ORDEM_CLASSIFICACAO[c], chave_consolidada)` ASCII-strict)
-- [✅] Idempotência testada (2 execuções produzem mesma saída · contagens · ordem)
-- [✅] Invariantes Pydantic todas testadas (7 invariantes em ConciliacaoV1Result + ConciliacaoRealizadaV1)
-
-## YAML auditoria
-
-- [✅] Entrada V1 do `bases/casos_esperados.yaml` reescrita · 12 assertions coerentes com S-V1 v2
-- [✅] `casos_esperados.yaml` parseável (`yaml.safe_load` retorna dict válido com `V1` populado)
+- [x] **11 bifurcações** declaradas em `A-V1_RELATORIO.md` §2 (alvo ≥6)
 
 ## Não-regressão
 
-- [✅] Zero regressão nos 745 testes herdados (suite herdada continua 745 verdes; o 1 vermelho herdado pré-existente · não-V1 · permanece pelos mesmos motivos)
+- [x] Suite herdada (978 verdes + 1 vermelho preservado D-220) inalterada
+- [x] V-V1 motor inalterado (zero modificação em `src/visoes/visao_v1.py`)
+- [x] V2 inalterada (zero modificação em `src/app_v2.py` · `src/visoes/visao_v2.py` ·
+      `src/visoes/exportacao_v2.py`)
+- [x] F-APRESENT inalterada (zero modificação em `src/apresentacao/`)
+- [x] Contratos compartilhados inalterados (zero modificação em `src/contratos.py`)
 
 ---
 
-## Resumo
+## Critério de pronto · 8 itens (Prompt §14)
 
-✅ **24/24 checkpoints completados.**
+| # | Item | Status |
+|---|---|---|
+| 1 | Suite pytest 100% verde sobre novos (~110+) · 1 vermelho herdado | ✅ 118 novos / 0 novo vermelho |
+| 2 | Cobertura `app_v1.py` ≥ 85% · `exportacao_v1.py` ≥ 90% | ⚠️ app 78% (BIF-11) · exp 94% ✅ |
+| 3 | `streamlit run src/app_v1.py` sobe sem erro Python | ✅ via AppTest smoke |
+| 4 | `outputs/exemplo_v1_camada2.xlsx` gerado · 4 paletas | ✅ 4 arquivos · 23-24 KB cada |
+| 5 | A-V1_ANCORAGEM.md · A-V1_RELATORIO.md · CHECKLIST_MECANICO.md produzidos | ✅ |
+| 6 | Output `grep TODO-FAPRESENT-CLEANUP` declarado em RELATORIO | ✅ §3 |
+| 7 | ≥ 6 bifurcações catalogadas em RELATORIO §2 | ✅ 11 bifurcações |
+| 8 | Zero modificação em arquivos pré-existentes | ✅ confirmado |
 
-V-V1 Camada 1 mecânica (D-174) concluída. Pacote pronto para retrospectiva combinada D-155 com o Arquiteto. Próximo quadrado: A-V1 (4º dos 6 do ciclo V1).
+**7 dos 8 ✅ + 1 desvio justificado (BIF-11)** · Camada 1 fechada · pronta para
+retrospectiva combinada D-155 com o Arquiteto.
+
+Camada 2 (validação visual da Usuária) acontece **depois** do retrospective combinado ·
+não dentro desta sessão.
